@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "pandiff-vscode.helloWorld",
-        "title": "Hello World"
+        "command": "pandiff-vscode.difs",
+        "title": "Pandiff"
       }
     ]
   },
