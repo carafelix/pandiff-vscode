@@ -1,4 +1,4 @@
-# Pandiff VScode extensions
+# Pandiff VScode extension
 
 Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
