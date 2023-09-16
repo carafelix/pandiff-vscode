@@ -1,14 +1,14 @@
 # pandiff-vscode README
 
-This is the README for your extension "pandiff-vscode". After writing up a brief description, we recommend including the following sections.
+Integration of [Pandiff][https://github.com/davidar/pandiff] to VScode.
 
 ## Requirements
 
-- System installed [Pandoc](https://pandoc.org/installing.html)
+- System installed [Pandoc](https://pandoc.org/installing.html);
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- File convertion from and to any type supported by Pandoc
 
 For example if there is an image subfolder under your extension project workspace:
 
