@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "pandiff-vscode.difs",
-        "title": "Pandiff"
+        "title": "Pandiff - Select two files for comparison"
       }
     ]
   },

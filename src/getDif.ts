@@ -1,8 +1,8 @@
 const exec = require('child_process').exec;
 
-    export async function runPandiffAndGetHTML(file1: string, file2: string): Promise<string> {
+    export async function runPandiffAndGetHTML(f1Path: string, f2Path: string): Promise<string> {
         return new Promise((resolve, reject) => {
-        const command = `pandiff ${file1} ${file2} --to=html`;
+        const command = `pandiff ${f1Path} ${f2Path} --to=html`;
 
         exec(command, (error:Error, stdout:string, stderr:string) => {
             if (error) {

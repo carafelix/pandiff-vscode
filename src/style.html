@@ -1,0 +1,28 @@
+    <style>
+    main {
+      box-sizing: border-box;
+      width: clamp(200px, 100%, 980px);
+      padding: 45px;
+    }
+    @media (max-width: 767px) {
+      body {
+        padding: 15px;
+      }
+    }
+    p{
+      text-align: start;
+      max-width: 70ch;
+    }
+    del {
+      color: #b31d28;
+      background-color: #ffeef0;
+    }
+    ins {
+      color: #22863a;
+      background-color: #f0fff4;
+    }
+    del + ins {
+      color: #e36209;
+      background-color: #ffebda;
+    }
+  </style>
