@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { runPandiffAndGetHTML } from './getDif';
 import * as path from 'path';
 import * as fs from 'fs';
-
+import { runPandiffAndGetHTML } from './getDif';
+import { combineHTML } from './combineHtml';
 
 export async function activate(context: vscode.ExtensionContext) {
 	let orange = vscode.window.createOutputChannel("Orange");
@@ -10,7 +10,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 	let getFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
-
 		let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
 													'**/node_modules/**');
 
@@ -42,25 +41,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		if(selectedFilePath1 && selectefFilePath2){
 			const html  = await runPandiffAndGetHTML(file1?.detail!,file2?.detail!)
 
-			function combineHTML(content:string,style:string){
-				return `<!DOCTYPE html>
-				<html lang="en">
-				<head>
-					<meta charset="UTF-8">
-					<meta name="viewport" content="width=device-width, initial-scale=1.0">
-					<title>Files Diff</title>
-				</head>
-				<body>
-					<style>
-						${style}
-					</style>
-					<div align="center">
-						${content}
-					</div>
-				</body>
-				</html>`;
-			}
-
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
 				'Pandif Render',
@@ -71,22 +51,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			// And set its HTML content
 			panel.webview.html = combineHTML(html,styles);
 			}
-
-		
-		
-
-
-		
-
-
-		
-
-		// 
-		
-
 	});
 
 	context.subscriptions.push(getFiles);
+
 }
 
 // This method is called when your extension is deactivated
