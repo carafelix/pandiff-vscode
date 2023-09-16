@@ -3,9 +3,14 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { runPandiffAndGetHTML } from './getDiffs';
 import { combineHTML } from './combineHtml';
-import { getFilesPath } from './filesPath';
+import { getFilesPath, getFileRevisionHashes } from './filesPath';
+const exec = require('child_process').exec;
+
 
 export async function activate(context: vscode.ExtensionContext) {
+
+	exec("git config --global alias.pandiff 'difftool -t pandiff -y'");
+	exec(`git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'`)
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 		
@@ -47,8 +52,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
-		
-
 
 		let fileRevision: vscode.QuickPickItem[] = [];
 
@@ -56,10 +59,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			matchOnDetail: true,
 			title: 'File Pick base',
 		});
-		let revision = await vscode.window.showQuickPick(fileRevision,{
-			matchOnDetail: true,
-			title: 'File Revision',
-		});
+
+		if(file){
+			let veet = await getFileRevisionHashes(file)
+			console.log(veet);
+			
+		}
 
 	});
 
