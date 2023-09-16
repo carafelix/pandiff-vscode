@@ -1,81 +1,45 @@
-# pandiff-vscode README
+# Pandiff VScode extensions
 
 Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
+## Disclaimer
+
+- Do not consider this extension as production ready. It's still on development
+
+
 ## Requirements
 
-- System installed [Pandoc](https://pandoc.org/installing.html);
+- System install of [Pandoc](https://pandoc.org/installing.html)
 
 ## Features
 
 - File convertion from and to any type supported by Pandoc
+- Render diffs between files inside VScode
+- Use Pandiff on git revisions
 
-For example if there is an image subfolder under your extension project workspace:
 
 \!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
 
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- Styles of the webview can be set directly on the style.html files
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Poor implementation for getting hashes
+- uses exec on cli for pandiff and git pandiff
+- extension limited to epub, .odt, txt, md, html, docx just for the showQuickPick
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
+- MVP
 
-Initial release of ...
+## Contribute
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-## To - do
-- Improve commit retrival for quickpick details
-```js
- const git = vscode.extensions.getExtension('vscode.git')
- ```
-
+* [Github](https://github.com/carafelix/pandiff-vscode)
 
 **Enjoy!**
 
