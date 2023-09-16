@@ -4,7 +4,7 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Disclaimer
 
-- Do not consider this extension as production ready. It's still on development, things may break. Use at your own dicretion
+- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
 
 
 ## Requirements
