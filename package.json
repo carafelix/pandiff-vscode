@@ -16,6 +16,10 @@
       {
         "command": "pandiff-vscode.difs",
         "title": "Pandiff - Select two files for comparison"
+      },
+      {
+        "command": "pandiff-vscode.compareRevision",
+        "title": "Pandiff - Compare file from Git Revision"
       }
     ]
   },

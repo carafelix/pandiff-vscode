@@ -3,25 +3,18 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { runPandiffAndGetHTML } from './getDiffs';
 import { combineHTML } from './combineHtml';
+import { getFilesPath } from './filesPath';
 
 export async function activate(context: vscode.ExtensionContext) {
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
-		let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
-													'**/node_modules/**');
+		
 
 		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'style.html'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
-													
-		let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
-				return uri.path
-			})
-			.map((path:string):vscode.QuickPickItem=>{
-				return {
-					detail: path,
-					label: path.slice(path.lastIndexOf('/')+1,Infinity),
-				}
-			});
+						
+	
+		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
 		let file1 = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
@@ -51,11 +44,26 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(compareTwoFiles);
 
-	// let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
-	// 	let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
-	// 												'**/node_modules/**');
-	// })
+	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
 
+		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
+		
+
+
+		let fileRevision: vscode.QuickPickItem[] = [];
+
+		let file = await vscode.window.showQuickPick(filesPath,{
+			matchOnDetail: true,
+			title: 'File Pick base',
+		});
+		let revision = await vscode.window.showQuickPick(fileRevision,{
+			matchOnDetail: true,
+			title: 'File Revision',
+		});
+
+	});
+
+	context.subscriptions.push(compareWithRevision);
 }
 
 // This method is called when your extension is deactivated
