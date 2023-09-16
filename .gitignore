@@ -3,3 +3,8 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+testFiles
+/testFiles
+.vscode
+/.vscode
+/testFiles/.vscode
