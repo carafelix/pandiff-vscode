@@ -1,15 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { runPandiffAndGetHTML } from './getDif';
+import { runPandiffAndGetHTML } from './diffSelected';
 import { combineHTML } from './combineHtml';
 
 export async function activate(context: vscode.ExtensionContext) {
-	let orange = vscode.window.createOutputChannel("Orange");
-	orange.append(new Date().toString())
 
-
-	let getFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
+	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 		let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
 													'**/node_modules/**');
 
@@ -52,8 +49,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			panel.webview.html = combineHTML(html,styles);
 			}
 	});
+	context.subscriptions.push(compareTwoFiles);
 
-	context.subscriptions.push(getFiles);
+	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
+		let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
+													'**/node_modules/**');
+	})
 
 }
 
