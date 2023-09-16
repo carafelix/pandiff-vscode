@@ -1,6 +1,6 @@
 # pandiff-vscode README
 
-Integration of [Pandiff](https://github.com/davidar/pandiff) to VScodasdasdasde.
+Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Requirements
 
