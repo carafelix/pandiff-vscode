@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { runPandiffAndGetHTML } from './getDiffs';
+import { runPandiffAndGetHTML, getGitDiffs } from './getDiffs';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevisionHashes } from './filesPath';
 const exec = require('child_process').exec;
@@ -43,7 +43,6 @@ export async function activate(context: vscode.ExtensionContext) {
 				{}
 			);
 		
-			// And set its HTML content
 			panel.webview.html = combineHTML(html,styles);
 			}
 	});
@@ -51,21 +50,41 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
 
+		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'style.html'));
+		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
+
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
-
-		let fileRevision: vscode.QuickPickItem[] = [];
-
 		let file = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
 			title: 'File Pick base',
 		});
 
 		if(file){
-			let veet = await getFileRevisionHashes(file)
-			console.log(veet);
-			
-		}
+			let hashes:string[] = (await getFileRevisionHashes(file)).filter((line)=>{
+				if(line){
+					return true
+				} else return false
+			});
 
+			let revision = await vscode.window.showQuickPick(hashes,{
+				matchOnDetail: true,
+				title: 'File Pick revision',
+			});
+
+			if(revision){
+				const html = await getGitDiffs(revision,file?.label!,file?.detail!)
+
+				const panel = vscode.window.createWebviewPanel(
+					'pandiffPanel',
+					'Pandif Render',
+					vscode.ViewColumn.One,
+					{}
+				);
+			
+				panel.webview.html = combineHTML(html,styles);
+
+			}
+		}
 	});
 
 	context.subscriptions.push(compareWithRevision);

@@ -1,5 +1,6 @@
-import * as vscode from 'vscode'
+import * as vscode from 'vscode';
 const exec = require('child_process').exec;
+
 
 export async function getFilesPath (){
     let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
@@ -8,36 +9,30 @@ export async function getFilesPath (){
                     return uri
                 })
                 .map((file:vscode.Uri):vscode.QuickPickItem=>{
+                    
+                    // let fileExt = file.path.slice(file.path.lastIndexOf('.')+1,Infinity);
                     return {
                         detail: file.path,
                         label: file.path.slice(file.path.lastIndexOf('/')+1,Infinity),
+                        iconPath: new vscode.ThemeIcon('file-text')
                     }
                 });
 
             return filesPath
 }
 
-export async function getFileRevisionHashes(file:vscode.QuickPickItem){
-    let orange = vscode.window.createOutputChannel("Orange");
-    // let fileParse = vscode.Uri.parse(file?.detail!)
-    orange.append(file?.detail!)
-    orange.show();
+export async function getFileRevisionHashes(file:vscode.QuickPickItem):Promise<string[]>{
     
-    if(!file)return;
+    if(!file)throw new Error('wasup');
 
-    let onelines = await getOneLines(file?.detail!).then((data)=>{
-        orange.appendLine(`${data}`);
-        orange.show();
-    })
+    let onelines:string = await getOneLines(file?.detail!);
 
-    
-    
-    // let fileHashes: vscode.QuickPickItem[] = []
+    return onelines.split('\n').map((line)=>line.slice(0,6));
 }
 
-export async function getOneLines(filePath:string){
+export async function getOneLines(filePath:string):Promise<string>{
     return new Promise((resolve, reject) => {
-        const fileParent = filePath.slice(0,filePath.lastIndexOf('/'))
+        const fileParent = filePath.slice(0,filePath.lastIndexOf('/'));
         const command = `cd ${fileParent} && git log --oneline ${filePath}`;
 
         exec(command, (error:Error, stdout:string, stderr:string) => {
