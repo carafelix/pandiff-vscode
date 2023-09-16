@@ -18,7 +18,7 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 - Use Pandiff on git revisions
 
 
-![preview](img/gateway.gif)
+![preview](https://raw.githubusercontent.com/carafelix/pandiff-vscode/main/img/gateway.gif)
 
 
 ## Extension Settings
