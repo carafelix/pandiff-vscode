@@ -8,3 +8,5 @@ testFiles
 .vscode
 /.vscode
 /testFiles/.vscode
+assets/gateway.epub
+assets/gatewayed.epub
