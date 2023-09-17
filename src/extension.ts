@@ -91,7 +91,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const html = await getGitDiffs(revision?.detail!,file.label,file.detail!)
 
 			if(!html){
-				vscode.window.showInformationMessage('No Differences')
+				vscode.window.showInformationMessage('No Differences with HEAD')
 				return
 			}
 		
