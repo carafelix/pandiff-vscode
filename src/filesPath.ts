@@ -34,6 +34,7 @@ export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.
     }).map((commit,i)=>{
         const splittedInfo = commit.split('\n');
         if(i==0){
+            // instead of this, I could return '' and later on filter the empty item and if [] is empty, return the main function and show msg, no commits beside HEAD
             splittedInfo[2] = '(HEAD) ' + splittedInfo[2]
         }
         return {
