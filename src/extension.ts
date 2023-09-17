@@ -50,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
 
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'style.html'));
+		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
