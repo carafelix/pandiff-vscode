@@ -23,9 +23,9 @@ const exec = require('child_process').exec;
 
         const par = filePath.slice(0,filePath.lastIndexOf('/')+1);
 
-        // git.addConfig('difftool.pandiff.cmd','pandiff "$LOCAL" "$REMOTE" --to=html', false, 'global');
+        git.addConfig('difftool.pandiff.cmd','pandiff "$LOCAL" "$REMOTE" --to=html', true, 'local');
 
-        // git.addConfig('alias.pandiff','difftool -t pandiff -y', false, 'global');
+        git.addConfig('alias.pandiff','difftool -t pandiff -y', true, 'local');
 
         const commands = ['pandiff', hash, 'HEAD', filename];
 
