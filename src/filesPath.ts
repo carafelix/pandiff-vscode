@@ -3,7 +3,7 @@ const exec = require('child_process').exec;
 
 
 export async function getFilesPath (){
-    let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx}',
+    let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx,**/*.pdf}',
                                                             '**/node_modules/**');
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
                     return uri

@@ -2,14 +2,17 @@
 
 Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
+## Requirements
+
+- System install of [Pandoc](https://pandoc.org/installing.html)
+- Run `npm install -g pandiff`
+
 ## Disclaimer
 
 - Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
 
 
-## Requirements
 
-- System install of [Pandoc](https://pandoc.org/installing.html)
 
 ## Features
 
@@ -27,9 +30,8 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Known Issues
 
-- Poor implementation for getting hashes
-- uses exec on cli for pandiff and git pandiff
-- extension limited to epub, .odt, txt, md, html, docx just for the showQuickPick
+- Uses exec on cli for accessing pandiff 
+- Extension limited to epub, .odt, txt, md, html, docx just for the showQuickPick
 
 ## Release Notes
 
