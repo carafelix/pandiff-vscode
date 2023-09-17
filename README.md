@@ -6,11 +6,6 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
 
-## Disclaimer
-
-- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
-
-
 ## Features
 
 - File convertion from and to any type supported by Pandoc
@@ -29,6 +24,9 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 - Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick
 
+## Disclaimer
+
+- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
 ## Release Notes
 
 ### 0.0.3
