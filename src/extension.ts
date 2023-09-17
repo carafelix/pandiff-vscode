@@ -24,17 +24,20 @@ export async function activate(context: vscode.ExtensionContext) {
 		let file1 = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
 			title: 'File Pick 1/2 (base)',
-		})
+		});
 		let file2 = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
 			title: 'File Pick 2/2 (changes)',
-		})
+		});
 
-		const selectedFilePath1 = file1?.detail;
-		const selectefFilePath2 = file2?.detail;
 
-		if(selectedFilePath1 && selectefFilePath2){
-			const html  = await runPandiffAndGetHTML(file1?.detail!,file2?.detail!)
+		if(!file1 || !file2){
+			vscode.window.showErrorMessage('File not selected')
+			return
+		} else if (file1 === file2){
+			vscode.window.showInformationMessage('Selected same file twice')
+		}
+			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
 
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
@@ -44,7 +47,8 @@ export async function activate(context: vscode.ExtensionContext) {
 			);
 		
 			panel.webview.html = combineHTML(html,styles);
-			}
+		
+			
 	});
 	context.subscriptions.push(compareTwoFiles);
 
@@ -59,32 +63,37 @@ export async function activate(context: vscode.ExtensionContext) {
 			title: 'File Pick base',
 		});
 
-		if(file){
-			let hashes:string[] = (await getFileRevisionHashes(file)).filter((line)=>{
-				if(line){
-					return true
-				} else return false
-			});
-
-			let revision = await vscode.window.showQuickPick(hashes,{
-				matchOnDetail: true,
-				title: 'File Pick revision',
-			});
-
-			if(revision){
-				const html = await getGitDiffs(revision,file?.label!,file?.detail!)
-
-				const panel = vscode.window.createWebviewPanel(
-					'pandiffPanel',
-					'Pandif Render',
-					vscode.ViewColumn.One,
-					{}
-				);
-			
-				panel.webview.html = combineHTML(html,styles);
-
-			}
+		if(!file){
+			vscode.window.showErrorMessage('file not found')
+			return
 		}
+		let hashes:string[] = (await getFileRevisionHashes(file)).filter((line)=>{
+			if(line){
+				return true
+			} else return false
+		});
+
+		let revision = await vscode.window.showQuickPick(hashes,{
+			matchOnDetail: true,
+			title: 'File Pick revision',
+		});
+
+		if(!revision){
+			vscode.window.showErrorMessage('revision not found')
+			return
+		}
+
+			const html = await getGitDiffs(revision,file.label,file.detail!)
+
+			const panel = vscode.window.createWebviewPanel(
+				'pandiffPanel',
+				'Pandif Render',
+				vscode.ViewColumn.One,
+				{}
+			);
+		
+			panel.webview.html = combineHTML(html,styles);
+
 	});
 
 	context.subscriptions.push(compareWithRevision);
