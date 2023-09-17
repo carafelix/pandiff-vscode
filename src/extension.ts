@@ -90,6 +90,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			const html = await getGitDiffs(revision?.detail!,file.label,file.detail!)
 
+			if(!html){
+				vscode.window.showInformationMessage('No Differences')
+				return
+			}
+		
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
 				'Pandif Render',

@@ -29,7 +29,9 @@ const exec = require('child_process').exec;
 
         const commands = ['pandiff', hash, 'HEAD', filename];
 
-        const out = await simpleGit(par).raw(...commands);
+        const out = await simpleGit(par, {
+            trimmed: true
+        }).raw(...commands);
 
         return out
     }
