@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { runPandiffAndGetHTML, getGitDiffs } from './getDiffs';
+import { runPandiffAndGetHTML, getGitDiffs} from './getDiffs';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevision } from './filesPath';
 const exec = require('child_process').exec;
@@ -9,8 +9,7 @@ const exec = require('child_process').exec;
 
 export async function activate(context: vscode.ExtensionContext) {
 	
-	exec("git config --global alias.pandiff 'difftool -t pandiff -y'");
-	exec(`git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'`)
+	
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
@@ -51,7 +50,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			
 	});
 	context.subscriptions.push(compareTwoFiles);
-
+	
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
 		
 		//when selecting from the explorer, avoid showing showing the selecting again

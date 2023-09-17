@@ -1,5 +1,9 @@
 import pandiff = require("pandiff");
 import * as vscode from "vscode";
+import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
+
+const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
+
 
 const exec = require('child_process').exec;
 
@@ -15,25 +19,17 @@ const exec = require('child_process').exec;
         } else return result
     }
 
-    export async function getGitDiffs(hash:string,filename:string,parentFolder:string):Promise<string> {
-        return new Promise((resolve, reject) => {
-            const par = parentFolder.slice(0,parentFolder.lastIndexOf('/')+1)
-            const command = `cd ${par} && git pandiff ${hash} HEAD ${filename}`;
-    
-                exec(command, (error:Error, stdout:string, stderr:string) => {
-                    if (error) {
-                        console.error(`Error running pandiff: ${error.message}`);
-                        reject(error);
-                        return;
-                    }
-            
-                    if (stderr) {
-                        console.error(`pandiff produced an error message: ${stderr}`);
-                        reject(new Error(stderr));
-                        return;
-                    }
-            
-                    resolve(stdout);
-                });
-            });
+    export async function getGitDiffs(hash:string,filename:string,filePath:string):Promise<string> {
+
+        const par = filePath.slice(0,filePath.lastIndexOf('/')+1);
+
+        git.addConfig('difftool.pandiff.cmd','pandiff "$LOCAL" "$REMOTE" --to=html', false, 'local');
+
+        git.addConfig('alias.pandiff','difftool -t pandiff -y', false, 'local');
+
+        const commands = ['pandiff', hash, 'HEAD', filename];
+
+        const out = await simpleGit(par).raw(...commands);
+
+        return out
     }
