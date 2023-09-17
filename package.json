@@ -1,8 +1,8 @@
 {
   "name": "pandiff-vscode",
-  "displayName": "Pandiff - Text Differences Render",
+  "displayName": "Pandiff - Text Difference Render",
   "description": "Pandiff integration in VScode",
-  "version": "0.0.26",
+  "version": "0.0.28",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",

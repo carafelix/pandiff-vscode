@@ -9,8 +9,7 @@ export async function getFilesPath (){
                     return uri
                 })
                 .map((file:vscode.Uri):vscode.QuickPickItem=>{
-                    
-                    // let fileExt = file.path.slice(file.path.lastIndexOf('.')+1,Infinity);
+
                     return {
                         detail: file.path,
                         label: file.path.slice(file.path.lastIndexOf('/')+1,Infinity),

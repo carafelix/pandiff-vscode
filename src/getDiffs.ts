@@ -1,9 +1,9 @@
 const exec = require('child_process').exec;
 import  * as vscode from "vscode";
 
-    export async function runPandiffAndGetHTML(f1Path: string, f2Path: string, par:string): Promise<string> {
+    export async function runPandiffAndGetHTML(f1Path: string, f2Path: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            const command = `cd ${par} && pandiff ${f1Path} ${f2Path} --to=html`;
+            const command = `pandiff ${f1Path} ${f2Path} --to=html`;
 
             exec(command, (error:Error, stdout:string, stderr:string) => {
                 if (error) {

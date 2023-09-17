@@ -9,6 +9,7 @@ const exec = require('child_process').exec;
 
 export async function activate(context: vscode.ExtensionContext) {
 	
+	exec(`npm install -g pandiff`)
 	exec("git config --global alias.pandiff 'difftool -t pandiff -y'");
 	exec(`git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'`)
 
@@ -37,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
-			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!,context.extensionPath)
+			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
 
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
