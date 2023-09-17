@@ -1,8 +1,8 @@
 {
   "name": "pandiff-vscode",
   "displayName": "Pandiff - Enriched Text Differences",
-  "description": "Pandiff integration in VScode",
-  "version": "0.0.30",
+  "description": "Visualize prose diffs from .docx, .odt, .md, or any format supported by Pandoc",
+  "version": "0.0.32",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",
