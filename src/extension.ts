@@ -37,7 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
-			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
+			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!,context.extensionPath)
 
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
