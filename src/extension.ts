@@ -53,6 +53,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(compareTwoFiles);
 
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
+		
+		//when selecting from the explorer, avoid showing showing the selecting again
 
 		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
@@ -67,11 +69,16 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage('file not found')
 			return
 		}
-		let hashes:vscode.QuickPickItem[] = (await getFileRevision(file)).filter((line)=>{
+		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevision(file))?.filter((line)=>{
 			if(line){
 				return true
 			} else return false
 		});
+
+		if(!hashes){
+			vscode.window.showErrorMessage('File has no commits')
+			return
+		}
 
 		let revision = await vscode.window.showQuickPick(hashes,{
 			matchOnDetail: true,
@@ -79,7 +86,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 
 		if(!revision?.detail){
-			vscode.window.showErrorMessage('revision not found')
 			return
 		}
 

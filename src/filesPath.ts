@@ -20,13 +20,14 @@ export async function getFilesPath (){
             return filesPath
 }
 
-export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[]>{
+export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[] | undefined> {
     
     if(!file)throw new Error('wasup');
 
     let commmitInfo:string = await getCommitsFullInfo(file?.detail!);
-
-    return commmitInfo.split('commit ').filter((c)=>{
+    if(!commmitInfo){
+        return undefined
+    } else return commmitInfo.split('commit ').filter((c)=>{
         if(!c){
             return false
         } else return true
