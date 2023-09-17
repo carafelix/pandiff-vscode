@@ -47,8 +47,8 @@ export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.
 export async function getCommitsFullInfo(filePath:string):Promise<string>{
     return new Promise((resolve, reject) => {
         const fileParent = filePath.slice(0,filePath.lastIndexOf('/'));
-        const command = `cd ${fileParent} && git log ${filePath}`;
-
+        const command = `cd "${fileParent}" && git log "${filePath}"`; // this could be improved to use simple-git
+    
         exec(command, (error:Error, stdout:string, stderr:string) => {
                 if (error) {
                     reject(error);
