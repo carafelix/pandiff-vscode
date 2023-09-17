@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { runPandiffAndGetHTML, getGitDiffs } from './getDiffs';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisionHashes } from './filesPath';
+import { getFilesPath, getFileRevision } from './filesPath';
 const exec = require('child_process').exec;
 
 
@@ -67,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage('file not found')
 			return
 		}
-		let hashes:string[] = (await getFileRevisionHashes(file)).filter((line)=>{
+		let hashes:vscode.QuickPickItem[] = (await getFileRevision(file)).filter((line)=>{
 			if(line){
 				return true
 			} else return false
@@ -78,12 +78,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			title: 'File Pick revision',
 		});
 
-		if(!revision){
+		if(!revision?.detail){
 			vscode.window.showErrorMessage('revision not found')
 			return
 		}
 
-			const html = await getGitDiffs(revision,file.label,file.detail!)
+			const html = await getGitDiffs(revision?.detail!,file.label,file.detail!)
 
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',

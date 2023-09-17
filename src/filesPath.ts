@@ -21,19 +21,33 @@ export async function getFilesPath (){
             return filesPath
 }
 
-export async function getFileRevisionHashes(file:vscode.QuickPickItem):Promise<string[]>{
+export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[]>{
     
     if(!file)throw new Error('wasup');
 
-    let onelines:string = await getOneLines(file?.detail!);
+    let commmitInfo:string = await getCommitsFullInfo(file?.detail!);
 
-    return onelines.split('\n').map((line)=>line.slice(0,6));
+    return commmitInfo.split('commit ').filter((c)=>{
+        if(!c){
+            return false
+        } else return true
+    }).map((commit,i)=>{
+        const splittedInfo = commit.split('\n');
+        if(i==0){
+            splittedInfo[2] = '(HEAD) ' + splittedInfo[2]
+        }
+        return {
+            label: splittedInfo[2],
+            detail: splittedInfo[0],
+            description: 'm:' + splittedInfo[4]
+        }
+    });
 }
 
-export async function getOneLines(filePath:string):Promise<string>{
+export async function getCommitsFullInfo(filePath:string):Promise<string>{
     return new Promise((resolve, reject) => {
         const fileParent = filePath.slice(0,filePath.lastIndexOf('/'));
-        const command = `cd ${fileParent} && git log --oneline ${filePath}`;
+        const command = `cd ${fileParent} && git log ${filePath}`;
 
         exec(command, (error:Error, stdout:string, stderr:string) => {
                 if (error) {
