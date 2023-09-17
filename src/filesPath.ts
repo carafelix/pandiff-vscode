@@ -20,7 +20,7 @@ export async function getFilesPath (){
             return filesPath
 }
 
-export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[] | undefined> {
+export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[] | undefined> {
     
     if(!file)throw new Error('wasup');
 
@@ -40,7 +40,8 @@ export async function getFileRevision(file:vscode.QuickPickItem):Promise<vscode.
         return {
             label: splittedInfo[2],
             detail: splittedInfo[0],
-            description: 'm:' + splittedInfo[4]
+            description: 'm:' + splittedInfo[4],
+            iconPath: new vscode.ThemeIcon('git-commit')
         }
     });
 }

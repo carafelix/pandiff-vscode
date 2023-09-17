@@ -2,9 +2,19 @@
 
 Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
+## Disclaimer
+
+- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
+- I am trying to get rid of the need for running the commands below
+
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
+- run ```npm i -g pandiff``` and
+```
+git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE"'
+git config --global alias.pandiff 'difftool -t pandiff -y'
+```
 
 ## Features
 
@@ -24,9 +34,7 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 - Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick
 
-## Disclaimer
 
-- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
 ## Release Notes
 
 ### 0.0.3

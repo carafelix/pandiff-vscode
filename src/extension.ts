@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { runPandiffAndGetHTML, getGitDiffs} from './getDiffs';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevision } from './filesPath';
+import { getFilesPath, getFileRevisions } from './filesPath';
 const exec = require('child_process').exec;
 
 
@@ -14,7 +14,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		
 		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
-						
 	
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
@@ -66,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage('file not found')
 			return
 		}
-		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevision(file))?.filter((line)=>{
+		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line)=>{
 			if(line){
 				return true
 			} else return false
