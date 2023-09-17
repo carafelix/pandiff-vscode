@@ -14,7 +14,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
 		
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
+		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 						
 	
@@ -55,7 +55,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		
 		//when selecting from the explorer, avoid showing showing the selecting again
 
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
+		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
