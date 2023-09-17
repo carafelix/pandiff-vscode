@@ -9,3 +9,4 @@ testFiles
 **/.eslintrc.json
 **/*.map
 **/*.ts
+img

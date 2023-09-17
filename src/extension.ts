@@ -15,7 +15,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 		
 
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'style.html'));
+		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 						
 	
@@ -88,6 +88,17 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(compareWithRevision);
+
+	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async function() {
+		const stylesFilePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
+
+		vscode.workspace.openTextDocument(stylesFilePath).then(doc => {
+			vscode.window.showTextDocument(doc)
+			})
+	});
+	context.subscriptions.push(editStyle);
+
+
 }
 
 // This method is called when your extension is deactivated

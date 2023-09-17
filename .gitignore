@@ -10,3 +10,4 @@ testFiles
 /testFiles/.vscode
 assets/gateway.epub
 assets/gatewayed.epub
+.vscodeignore
