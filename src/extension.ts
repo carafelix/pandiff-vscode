@@ -9,7 +9,8 @@ const exec = require('child_process').exec;
 
 export async function activate(context: vscode.ExtensionContext) {
 	
-	
+	exec("git config --global alias.pandiff 'difftool -t pandiff -y'");
+	exec(`git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'`)
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
