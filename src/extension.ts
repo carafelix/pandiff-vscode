@@ -8,13 +8,13 @@ const exec = require('child_process').exec;
 
 
 export async function activate(context: vscode.ExtensionContext) {
-
+	
 	exec("git config --global alias.pandiff 'difftool -t pandiff -y'");
 	exec(`git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'`)
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
-		
 
+		
 		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 						
@@ -106,8 +106,6 @@ export async function activate(context: vscode.ExtensionContext) {
 			})
 	});
 	context.subscriptions.push(editStyle);
-
-
 }
 
 // This method is called when your extension is deactivated

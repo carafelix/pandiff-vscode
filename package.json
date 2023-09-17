@@ -2,7 +2,7 @@
   "name": "pandiff-vscode",
   "displayName": "Pandiff - Text Differences Render",
   "description": "Pandiff integration in VScode",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",
@@ -22,13 +22,22 @@
       },
       {
         "command": "pandiff-vscode.compareRevision",
-        "title": "Pandiff - Compare file from Git Revision"
+        "title": "Pandiff - View diffs from revision"
       },
       {
         "command": "pandiff-vscode.editStyles",
         "title": "Pandiff - Edit styles file"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resource =~ /\\.(docx|odt|epub|pdf|md|txt)$/",
+          "command": "pandiff-vscode.compareRevision",
+          "group": "3_compare@999"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
