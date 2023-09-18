@@ -22,8 +22,8 @@ const exec = child_process.exec;
     export async function getGitDiffs(hash:string,filename:string,filePath:string,extensionPath:string):Promise<string> {
 
         const par = filePath.slice(0,filePath.lastIndexOf('/')+1);
-
-        const tmp = extensionPath + '/tmp/' + filename
+        const tmpFolder = extensionPath + '/tmp/'
+        const tmp = tmpFolder + filename
         
         const rev = await new Promise<string>((resolve, reject) => {
             exec(`cd ${par} && git show ${hash}:${filename}`, (err:Error,stdout:string,stderr:string)=>{
@@ -36,7 +36,10 @@ const exec = child_process.exec;
                 }
                 resolve(stdout)
             })
-        }) //await git.show(`${hash}:${filename} > ${tmp}`);
+        })
+        if(!fs.readdirSync(tmpFolder)){
+            fs.mkdirSync(tmpFolder)
+        }
 
         fs.writeFileSync(tmp,rev)
         
