@@ -1,4 +1,7 @@
+
+
 export function combineHTML(content:string,style:string){
+
     return `<!DOCTYPE html>
     <html lang="en">
     <head>

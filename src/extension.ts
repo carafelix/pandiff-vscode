@@ -9,10 +9,11 @@ const exec = require('child_process').exec;
 
 export async function activate(context: vscode.ExtensionContext) {
 	
+	const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
+
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
 		
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 	
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
@@ -48,7 +49,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(compareTwoFiles);
 	
-	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function(...files:vscode.Uri[] | Array<any>) {
+	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
 		let file:vscode.QuickPickItem | undefined;
 		console.log(files.length)
 
@@ -68,18 +69,14 @@ export async function activate(context: vscode.ExtensionContext) {
                         iconPath: new vscode.ThemeIcon('file-text')
                     }
 		}
-		
 
-		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
-
-		
 
 		if(!file){
 			vscode.window.showErrorMessage('file not found')
 			return
 		}
-		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line)=>{
+		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line) => {
 			if(line){
 				return true
 			} else return false
@@ -119,16 +116,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(compareWithRevision);
 
-	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async function() {
-		const stylesFilePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
+	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async ()=> {
 
-		vscode.workspace.openTextDocument(stylesFilePath).then(doc => {
+		vscode.workspace.openTextDocument(stylesFile).then(doc => {
 			vscode.window.showTextDocument(doc)
 			})
 	});
 	context.subscriptions.push(editStyle);
 
-	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async function (...files:vscode.Uri[]) {
+	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async (...files:vscode.Uri[]) => {
 		if(!files){
 			return
 		} else{
@@ -136,6 +132,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	})
 	context.subscriptions.push(rightClick);
+
+	
 
 }
 
