@@ -14,7 +14,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
 		
-		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
+		
 	
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
@@ -43,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				{}
 			);
 		
-			panel.webview.html = combineHTML(html,styles);
+			panel.webview.html = combineHTML(html,stylesFile);
 		
 			
 	});
@@ -70,7 +70,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     }
 		}
 
-		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
+		
 
 		if(!file){
 			vscode.window.showErrorMessage('file not found')
@@ -110,7 +110,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				{}
 			);
 		
-			panel.webview.html = combineHTML(html,styles);
+			panel.webview.html = combineHTML(html,stylesFile);
 
 	});
 

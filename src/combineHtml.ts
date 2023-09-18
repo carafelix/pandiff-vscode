@@ -1,6 +1,9 @@
+import * as vscode from 'vscode';
+import * as fs from 'fs'
 
+export function combineHTML(content:string,stylesFile:vscode.Uri){
 
-export function combineHTML(content:string,style:string){
+    const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 
     return `<!DOCTYPE html>
     <html lang="en">
@@ -11,7 +14,7 @@ export function combineHTML(content:string,style:string){
     </head>
     <body>
         <style>
-            ${style}
+            ${styles}
         </style>
         <div align="center">
             ${content}
