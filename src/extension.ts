@@ -48,18 +48,32 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(compareTwoFiles);
 	
-	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function() {
+	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async function(...files:vscode.Uri[] | Array<any>) {
+		let file:vscode.QuickPickItem | undefined;
+		console.log(files.length)
+
+		if(files.length === 0 || files?.[0]?.[0]?.path === undefined){
+			let filesPath: vscode.QuickPickItem[] = await getFilesPath();
+
+				file = await vscode.window.showQuickPick(filesPath,{
+				matchOnDetail: true,
+				title: 'File Pick base',
+			});
+		} else {
+			const f = files[0][0];
+			const name = f.path.slice(f.path.lastIndexOf('/')+1,Infinity);
+			file = {
+                        detail: f.path,
+                        label: name,
+                        iconPath: new vscode.ThemeIcon('file-text')
+                    }
+		}
 		
-		//when selecting from the explorer, avoid showing showing the selecting again
 
 		const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 		const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
 
-		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
-		let file = await vscode.window.showQuickPick(filesPath,{
-			matchOnDetail: true,
-			title: 'File Pick base',
-		});
+		
 
 		if(!file){
 			vscode.window.showErrorMessage('file not found')
@@ -113,6 +127,16 @@ export async function activate(context: vscode.ExtensionContext) {
 			})
 	});
 	context.subscriptions.push(editStyle);
+
+	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async function (...files:vscode.Uri[]) {
+		if(!files){
+			return
+		} else{
+			vscode.commands.executeCommand('pandiff-vscode.compareRevision',files);
+		}
+	})
+	context.subscriptions.push(rightClick);
+
 }
 
 // This method is called when your extension is deactivated
