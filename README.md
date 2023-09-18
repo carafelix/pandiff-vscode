@@ -13,7 +13,7 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 - run the following commands:
 ```
 npm i -g pandiff
-git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE"'
+git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'
 git config --global alias.pandiff 'difftool -t pandiff -y'
 ```
 
