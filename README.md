@@ -2,10 +2,6 @@
 
 Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
-## Disclaimer
-
-- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
-
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
@@ -25,20 +21,23 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 - Styles of the webview can be set directly on the style.html files
 
+## Disclaimer
+
+- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
 ## Known Issues
 
-- Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick
+- Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick with no major reason to not overcrowd the list
 
 
 ## Release Notes
 
+### 0.0.4
+
+- removed the need for running commands on installation
 ### 0.0.3
 
 - Implemented simple-git instead of using exec on cli commands
 - uses native pandiff function
-### 0.0.1
-
-- MVP
 
 ## Contribute
 
