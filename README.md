@@ -5,11 +5,11 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- Git based OS with Git installed, Windows may or may not work.
+- For Git related functions requires Unix based OS, Windows may or may not work.
 
 ## Features
 
-- File convertion from and to any type supported by Pandoc
+- File conversion from and to any type supported by Pandoc
 - Render diffs between files inside VScode
 - Use Pandiff on git revisions
 
