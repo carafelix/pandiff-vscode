@@ -10,8 +10,9 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- run ```npm i -g pandiff``` and
+- run the following commands:
 ```
+npm i -g pandiff
 git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE"'
 git config --global alias.pandiff 'difftool -t pandiff -y'
 ```
