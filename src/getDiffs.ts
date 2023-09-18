@@ -1,11 +1,11 @@
 import pandiff = require("pandiff");
 import * as vscode from "vscode";
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
+import * as fs from 'fs';
 
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
-
-
-const exec = require('child_process').exec;
+const child_process = require('child_process')
+const exec = child_process.exec;
 
     export async function runPandiffAndGetHTML(f1Path: string, f2Path: string): Promise<string> {
         const result = await pandiff(f1Path,f2Path,{
@@ -19,19 +19,34 @@ const exec = require('child_process').exec;
         } else return result
     }
 
-    export async function getGitDiffs(hash:string,filename:string,filePath:string):Promise<string> {
+    export async function getGitDiffs(hash:string,filename:string,filePath:string,extensionPath:string):Promise<string> {
 
         const par = filePath.slice(0,filePath.lastIndexOf('/')+1);
 
-        git.addConfig('difftool.pandiff.cmd','pandiff "$LOCAL" "$REMOTE" --to=html', true, 'local');
+        const tmp = extensionPath + '/tmp/' + filename
+        
+        const rev = await new Promise<string>((resolve, reject) => {
+            exec(`cd ${par} && git show ${hash}:${filename}`, (err:Error,stdout:string,stderr:string)=>{
+                if(err){
+                    reject(err)
+                    return
+                }
+                if(stderr){
+                    reject(new Error(stderr))
+                }
+                resolve(stdout)
+            })
+        }) //await git.show(`${hash}:${filename} > ${tmp}`);
 
-        git.addConfig('alias.pandiff','difftool -t pandiff -y', true, 'local');
+        fs.writeFileSync(tmp,rev)
+        
+        const result = await runPandiffAndGetHTML(tmp,filePath)
 
-        const commands = ['pandiff', hash, 'HEAD', filename];
+        fs.unlink(tmp,(err)=>{
+            if(err){
+                throw err
+            }
+        });
 
-        const out = await simpleGit(par, {
-            trimmed: true
-        }).raw(...commands);
-
-        return out
+        return result
     }

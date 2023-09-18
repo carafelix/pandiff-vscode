@@ -5,17 +5,11 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 ## Disclaimer
 
 - Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
-- I am trying to get rid of the need for running the commands below
 
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- run the following commands:
-```
-npm i -g pandiff
-git config --global difftool.pandiff.cmd 'pandiff "$LOCAL" "$REMOTE" --to=html'
-git config --global alias.pandiff 'difftool -t pandiff -y'
-```
+- Git based OS with Git installed, Windows may or may not work.
 
 ## Features
 
