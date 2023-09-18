@@ -106,7 +106,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(compareWithRevision);
 
 	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async function() {
-		const stylesFilePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.html'));
+		const stylesFilePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 
 		vscode.workspace.openTextDocument(stylesFilePath).then(doc => {
 			vscode.window.showTextDocument(doc)
