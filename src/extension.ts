@@ -3,7 +3,6 @@ import * as path from 'path';
 import { runPandiffAndGetHTML, getGitDiffs} from './getDiffs';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevisions } from './filesPath';
-const exec = require('child_process').exec;
 
 
 export async function activate(context: vscode.ExtensionContext) {

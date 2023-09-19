@@ -4,8 +4,6 @@ import * as fs from 'fs';
 import * as path from 'path'
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
-const child_process = require('child_process')
-const exec = child_process.exec;
 
     export async function runPandiffAndGetHTML(f1Path: string, f2Path: string): Promise<string> {
         const result = await pandiff(f1Path,f2Path,{
