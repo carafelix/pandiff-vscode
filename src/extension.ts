@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as fs from 'fs';
 import { runPandiffAndGetHTML, getGitDiffs} from './getDiffs';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevisions } from './filesPath';
@@ -11,11 +10,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
 
+
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
-		
-		
-	
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
 		let file1 = await vscode.window.showQuickPick(filesPath,{

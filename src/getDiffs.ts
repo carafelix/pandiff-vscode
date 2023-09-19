@@ -1,8 +1,8 @@
 import pandiff = require("pandiff");
 import * as vscode from "vscode";
-import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 import * as fs from 'fs';
-
+import * as path from 'path'
+import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 const child_process = require('child_process')
 const exec = child_process.exec;
@@ -21,23 +21,15 @@ const exec = child_process.exec;
 
     export async function getGitDiffs(hash:string,filename:string,filePath:string,extensionPath:string):Promise<string> {
 
-        const par = filePath.slice(0,filePath.lastIndexOf('/')+1);
-        const tmpFolder = extensionPath + '/tmp/'
+        const parentPath = path.dirname(filePath)
+        const tmpFolder = path.join(extensionPath, 'tmp')
         const tmp = tmpFolder + filename
-        
-        const rev = await new Promise<string>((resolve, reject) => {
-            exec(`cd ${par} && git show ${hash}:${filename}`, (err:Error,stdout:string,stderr:string)=>{
-                if(err){
-                    reject(err)
-                    return
-                }
-                if(stderr){
-                    reject(new Error(stderr))
-                }
-                resolve(stdout)
-            })
-        })
-        if(!fs.readdirSync(tmpFolder)){
+
+        const rev = await git.cwd({
+            path: parentPath
+        }).show(`${hash}:${filename}`);
+
+        if(!fs.existsSync(tmpFolder)){
             fs.mkdirSync(tmpFolder)
         }
 

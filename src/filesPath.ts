@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-const exec = require('child_process').exec;
+import * as path from 'path'
+import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
+const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 
 export async function getFilesPath (){
@@ -12,7 +14,7 @@ export async function getFilesPath (){
 
                     return {
                         detail: file.path,
-                        label: file.path.slice(file.path.lastIndexOf('/')+1,Infinity),
+                        label: path.basename(file.path),
                         iconPath: new vscode.ThemeIcon('file-text')
                     }
                 });
@@ -24,43 +26,29 @@ export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode
     
     if(!file)throw new Error('wasup');
 
-    let commmitInfo:string = await getCommitsFullInfo(file?.detail!);
-    if(!commmitInfo){
+    const log:LogResult = await getCommitsFullInfo(file?.detail!);
+
+    if(!log){
         return undefined
-    } else return commmitInfo.split('commit ').filter((c)=>{
-        if(!c){
-            return false
-        } else return true
-    }).map((commit,i)=>{
-        const splittedInfo = commit.split('\n');
-        if(i==0){
-            // instead of this, I could return '' and later on filter the empty item and if [] is empty, return the main function and show msg, no commits beside HEAD
-            splittedInfo[2] = '(HEAD) ' + splittedInfo[2]
-        }
+    }
+
+    return log.all.map((c)=>{
         return {
-            label: splittedInfo[2],
-            detail: splittedInfo[0],
-            description: 'm:' + splittedInfo[4],
+            label: c.date,
+            detail: c.hash,
+            description: 'm:' + c.message,
             iconPath: new vscode.ThemeIcon('git-commit')
         }
-    });
+    })
+
+
 }
 
-export async function getCommitsFullInfo(filePath:string):Promise<string>{
-    return new Promise((resolve, reject) => {
-        const fileParent = filePath.slice(0,filePath.lastIndexOf('/'));
-        const command = `cd "${fileParent}" && git log "${filePath}"`; // this could be improved to use simple-git
-    
-        exec(command, (error:Error, stdout:string, stderr:string) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-                if (stderr) {
-                    reject(new Error(stderr));
-                    return;
-                }
-                resolve(stdout);
-        });
-    });
+export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
+    const parentPath = path.dirname(filePath)
+    return await git.cwd({
+        path: parentPath,
+    }).log({
+        file: filePath,
+    })
 }
