@@ -32,11 +32,11 @@ export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode
         return undefined
     }
 
-    return log.all.map((c)=>{
+    return log.all.map((commit)=>{
         return {
-            label: c.date,
-            detail: c.hash,
-            description: 'm:' + c.message,
+            label: commit.date,
+            detail: commit.hash,
+            description: 'm:' + commit.message,
             iconPath: new vscode.ThemeIcon('git-commit')
         }
     })
