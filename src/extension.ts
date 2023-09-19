@@ -18,13 +18,17 @@ export async function activate(context: vscode.ExtensionContext) {
 			matchOnDetail: true,
 			title: 'File Pick 1/2 (base)',
 		});
+
+		if(!file1){
+			vscode.window.showErrorMessage('File not selected')
+			return
+		}
 		let file2 = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
 			title: 'File Pick 2/2 (changes)',
 		});
 
-
-		if(!file1 || !file2){
+		if(!file2){
 			vscode.window.showErrorMessage('File not selected')
 			return
 		} else if (file1 === file2){
