@@ -24,7 +24,7 @@ export async function getFilesPath (){
 
 export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode.QuickPickItem[] | undefined> {
     
-    if(!file)throw new Error('wasup');
+    if(!file)return;
 
     const log:LogResult = await getCommitsFullInfo(file?.detail!);
 
