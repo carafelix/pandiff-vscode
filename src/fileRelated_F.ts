@@ -7,7 +7,7 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function getFilesPath (){
     let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx,**/*.pdf}',
-                                                            '**/node_modules/**');
+                                                            '**/node_modules/**'); // this should be a .json config file that gets parse
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
                     return uri
                 })
@@ -33,11 +33,14 @@ export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode
         return undefined
     }
 
-    return log.all.map((commit)=>{
+    return log.all.map((commit,i )=>{
+        if(i===0){
+            commit.date = 'HEAD: ' + commit.date
+        }
         return {
             label: commit.date,
-            detail: commit.hash,
-            description: 'm:' + commit.message,
+            detail: 'm: ' + commit.message,
+            description: commit.hash,
             iconPath: new vscode.ThemeIcon('git-commit')
         }
     })
@@ -53,9 +56,12 @@ export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
 }
 
 
-export function writeTmpFile(filename:string, parentPath:string, content:Buffer):string{
+export function writeTmpFile(filename:string, parentPath:string, content:Buffer, changeFilename:boolean):string{
     const tmpFolder = path.join(parentPath, 'tmp')
-    const tmp = path.join(tmpFolder, filename);
+    let tmp
+    if(changeFilename){
+        tmp = path.join(tmpFolder, '2_' + filename);
+    } else tmp = path.join(tmpFolder, '1_' + filename);
 
     if(!fs.existsSync(tmpFolder)){
         fs.mkdirSync(tmpFolder)

@@ -18,19 +18,23 @@
     "commands": [
       {
         "command": "pandiff-vscode.difs",
-        "title": "Pandiff - Select two files for comparison"
+        "title": "Pandiff: Select two files for comparison"
       },
       {
         "command": "pandiff-vscode.compareRevision",
-        "title": "Pandiff - View diffs from revision to HEAD"
+        "title": "Pandiff: Compare diffs from revision to Working Tree"
       },
       {
         "command": "pandiff-vscode.editStyles",
-        "title": "Pandiff - Edit styles file"
+        "title": "Pandiff: Edit styles file"
       },
       {
         "command": "pandiff-vscode.rightClick",
         "title": "Compare prose on revision"
+      },
+      {
+        "command": "pandiff-vscode.twoRevs",
+        "title": "Pandiff: Compare diffs from two selected revisions"
       }
     ],
     "menus": {

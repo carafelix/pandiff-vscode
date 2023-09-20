@@ -36,15 +36,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			const panel = vscode.window.createWebviewPanel(
 				'pandiffPanel',
-				'Pandif Render',
+				`${file1.label} - ${file2.label}`,
 				vscode.ViewColumn.One,
 				{}
 			);
 		
 			panel.webview.html = combineHTML(html,stylesFile);
-		
-			
 	});
+
 	context.subscriptions.push(compareTwoFiles);
 	
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
@@ -86,36 +85,34 @@ export async function activate(context: vscode.ExtensionContext) {
 			title: 'File Pick revision',
 		});
 
-		const fileHash = revision?.detail
+		const fileHash = revision?.description
 		const fileName = file.label
 		const fileFullPath = file.detail
-
 
 		if(!fileHash || !fileName || !fileFullPath){
 			return
 		}
-
         const fileParentPath = node_path.dirname(fileFullPath);
 
-		const gitShow:Buffer | null = await getGitShow(fileHash,fileName,fileParentPath);
+		const gitShow= await getGitShow(fileHash,fileName,fileParentPath);
 
 		if(!gitShow){
 			return
 		}
 
-		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow);
+		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow as Buffer, false);
 		const html = await runPandiffAndGetHTML(tmp,fileFullPath);
 		unlinkTmpFile(tmp);
 		
 
 		if(!html){
-			vscode.window.showInformationMessage('No Differences with HEAD')
+			vscode.window.showInformationMessage('No Difference with Working Tree file')
 			return
 		}
 		
 		const panel = vscode.window.createWebviewPanel(
 			'pandiffPanel',
-			'Pandif Render',
+			`${fileName}: ${fileHash.slice(0,6)} - (Working Tree)`,
 			vscode.ViewColumn.One,
 			{}
 		);
@@ -127,7 +124,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(compareWithRevision);
 
 	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async ()=> {
-
 		vscode.workspace.openTextDocument(stylesFile).then(doc => {
 			vscode.window.showTextDocument(doc)
 			})
@@ -143,6 +139,89 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	})
 	context.subscriptions.push(rightClick);
+
+	let compareTwoRevisions = vscode.commands.registerCommand('pandiff-vscode.twoRevs', async () => {
+		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
+
+		let file = await vscode.window.showQuickPick(filesPath,{
+				matchOnDetail: true,
+				title: 'Pick file 1/3',
+			})
+
+		if(!file){
+			return
+		}
+
+		let hashes:vscode.QuickPickItem[] | undefined = await getFileRevisions(file);
+
+		if(!hashes){
+			vscode.window.showErrorMessage('File has no commits')
+			return
+		}
+		
+		let revision1 = await vscode.window.showQuickPick(hashes,{
+			matchOnDetail: true,
+			title: 'Pick revision 2/3',
+		});
+
+		const hash1 = revision1?.description
+
+		if(!hash1){
+			return
+		}	
+
+		let revision2 = await vscode.window.showQuickPick(hashes,{
+			matchOnDetail: true,
+			title: 'Pick revision 3/3',
+		});
+		
+		const hash2 = revision2?.description;
+
+		if(!hash2){
+			return
+		}
+
+		const fileName = file.label
+		const fileFullPath = file.detail;
+
+		if(!fileName || !fileFullPath){
+			return
+		}
+        const fileParentPath = node_path.dirname(fileFullPath);
+		
+		const gitShow1 = await getGitShow(hash1,fileName,fileParentPath);
+		if(!gitShow1){
+			return
+		}
+		const tmp1 = writeTmpFile(fileName,context.extensionPath, gitShow1 as Buffer,false);
+
+		const gitShow2 = await getGitShow(hash2,fileName,fileParentPath);
+		if(!gitShow2){
+			return
+		}
+		const tmp2 = writeTmpFile(fileName,context.extensionPath, gitShow2 as Buffer, true);
+
+		const html = await runPandiffAndGetHTML(tmp1,tmp2);
+		unlinkTmpFile(tmp1);
+		unlinkTmpFile(tmp2);
+
+		if(!html){
+			vscode.window.showInformationMessage('No differences between Revisions')
+			return
+		}
+		
+		const panel = vscode.window.createWebviewPanel(
+			'pandiffPanel',
+			`${fileName}: ${hash1.slice(0,6)} - ${hash2.slice(0,6)}`,
+			vscode.ViewColumn.One,
+			{}
+		);
+		
+		panel.webview.html = combineHTML(html,stylesFile);
+
+	});
+
+	context.subscriptions.push(compareTwoRevisions);
 
 }
 
