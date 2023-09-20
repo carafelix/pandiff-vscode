@@ -1,0 +1,45 @@
+{
+    "enabled-fileFormats": 
+                    [
+                        "**/*.docx",
+                        "**/*.odt",
+                        "**/*.txt",
+                        "**/*.md",
+                        "**/*.html",
+                        "**/*.epub"
+
+                    ],
+      
+    "disabled-directories":
+                    [
+                        "**/node_modules/**"
+                        
+                    ],
+    "disabled-fileformats": 
+                    [
+                        "**/*.bib",
+                        "**/*.biblatex",
+                        "**/*.creole",
+                        "**/*.json",
+                        "**/*.csv",
+                        "**/*.tsv",
+                        "**/*.xml",
+                        "**/*.dokuwiki",
+                        "**/*.fb2",
+                        "**/*.ipynb",
+                        "**/*.1",
+                        "**/*.muse",
+                        "**/*.hs",
+                        "**/*.opml",
+                        "**/*.org",
+                        "**/*.ris",
+                        "**/*.rtf",
+                        "**/*.rst",
+                        "**/*.t2t",
+                        "**/*.textile",
+                        "**/*.tikiwiki",
+                        "**/*.twiki",
+                        "**/*.typst",
+                        "**/*.wiki"
+                    ]
+}

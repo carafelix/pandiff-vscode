@@ -1,13 +1,15 @@
 import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
+import * as extensionSettings from './config/settings.json'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 
 export async function getFilesPath (){
-    let filesUri = await vscode.workspace.findFiles('{**/*.epub,**/*.odt,**/*.txt,**/*.md,**/*.html,**/*.docx,**/*.pdf}',
-                                                            '**/node_modules/**'); // this should be a .json config file that gets parse
+    let filesUri = await vscode.workspace.findFiles(spreadPatterns(extensionSettings['enabled-fileFormats']),
+                                                    spreadPatterns(extensionSettings['disabled-directories']));
+                                                    
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
                     return uri
                 })
@@ -72,7 +74,7 @@ export function writeTmpFile(filename:string, parentPath:string, content:Buffer,
     return tmp
 }
 
-export async function unlinkTmpFile(tmpPath:string){
+export function unlinkTmpFile(tmpPath:string){
     fs.unlink(tmpPath,(err)=>{
         if(err){
             throw err
@@ -80,3 +82,6 @@ export async function unlinkTmpFile(tmpPath:string){
     });
 }
 
+function spreadPatterns(patterns:string[]):string{
+    return "{" + patterns.join(',') + '}'
+}

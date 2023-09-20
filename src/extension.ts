@@ -8,7 +8,7 @@ import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile } from './f
 export async function activate(context: vscode.ExtensionContext) {
 	
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
-
+	const configFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'src' ,'config', 'settings.json'));
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
@@ -123,14 +123,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(compareWithRevision);
 
-	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async ()=> {
-		vscode.workspace.openTextDocument(stylesFile).then(doc => {
-			vscode.window.showTextDocument(doc)
-			})
-	});
-
-	context.subscriptions.push(editStyle);
-
 	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async (...files:vscode.Uri[]) => {
 		if(!files){
 			return
@@ -222,6 +214,22 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(compareTwoRevisions);
+
+	let editStyle = vscode.commands.registerCommand('pandiff-vscode.editStyles', async ()=> {
+		vscode.workspace.openTextDocument(stylesFile).then(doc => {
+			vscode.window.showTextDocument(doc)
+			})
+	});
+
+	context.subscriptions.push(editStyle);
+
+	let editConfig = vscode.commands.registerCommand('pandiff-vscode.editConfig',async () => {
+		vscode.workspace.openTextDocument(configFile).then(doc => {
+			vscode.window.showTextDocument(doc)
+			})
+	})
+	context.subscriptions.push(editConfig);
+
 
 }
 

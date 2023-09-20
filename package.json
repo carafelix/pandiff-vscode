@@ -35,6 +35,10 @@
       {
         "command": "pandiff-vscode.twoRevs",
         "title": "Pandiff: Compare diffs from two selected revisions"
+      },
+      {
+        "command": "pandiff-vscode.editConfig",
+        "title": "Pandiff: Edit config file"
       }
     ],
     "menus": {
