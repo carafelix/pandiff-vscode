@@ -19,19 +19,19 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
     export async function getGitDiffs(hash:string,filename:string,filePath:string,extensionPath:string):Promise<string> {
 
-        const parentPath = path.dirname(filePath)
+        const parentPath = path.dirname(filePath);
         const tmpFolder = path.join(extensionPath, 'tmp')
-        const tmp = tmpFolder + filename
+        const tmp = path.join(tmpFolder, filename)
 
-        const rev = await git.cwd({
+        const rev = git.cwd({
             path: parentPath
-        }).show(`${hash}:${filename}`);
+        }).showBuffer(`${hash}:${filename}`);
 
         if(!fs.existsSync(tmpFolder)){
             fs.mkdirSync(tmpFolder)
         }
 
-        fs.writeFileSync(tmp,rev)
+        fs.writeFileSync(tmp, await rev)
         
         const result = await runPandiffAndGetHTML(tmp,filePath)
 
