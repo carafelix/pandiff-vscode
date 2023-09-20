@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import { runPandiffAndGetHTML, getGitDiffs} from './getDiffs';
+import * as node_path from 'path';
+import { runPandiffAndGetHTML, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisions } from './filesPath';
+import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile } from './fileRelated_F';
 
 
 export async function activate(context: vscode.ExtensionContext) {
 	
-	const stylesFile: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'styles', 'style.css'));
+	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
 
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
@@ -20,7 +20,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 
 		if(!file1){
-			vscode.window.showErrorMessage('File not selected')
 			return
 		}
 		let file2 = await vscode.window.showQuickPick(filesPath,{
@@ -29,7 +28,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 
 		if(!file2){
-			vscode.window.showErrorMessage('File not selected')
 			return
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
@@ -51,7 +49,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
 		let file:vscode.QuickPickItem | undefined;
-		console.log(files.length)
 
 		if(files.length === 0 || files?.[0]?.[0]?.path === undefined){
 			let filesPath: vscode.QuickPickItem[] = await getFilesPath();
@@ -69,8 +66,6 @@ export async function activate(context: vscode.ExtensionContext) {
                         iconPath: new vscode.ThemeIcon('file-text')
                     }
 		}
-
-		
 
 		if(!file){
 			vscode.window.showErrorMessage('file not found')
@@ -92,25 +87,41 @@ export async function activate(context: vscode.ExtensionContext) {
 			title: 'File Pick revision',
 		});
 
-		if(!revision?.detail){
+		const fileHash = revision?.detail
+		const fileName = file.label
+		const fileFullPath = file.detail
+
+
+		if(!fileHash || !fileName || !fileFullPath){
 			return
 		}
 
-			const html = await getGitDiffs(revision?.detail!,file.label,file.detail!,context.extensionPath)
+        const fileParentPath = node_path.dirname(fileFullPath);
 
-			if(!html){
-				vscode.window.showInformationMessage('No Differences with HEAD')
-				return
-			}
+		const gitShow:Buffer | null = await getGitShow(fileHash,fileName,fileParentPath);
+
+		if(!gitShow){
+			return
+		}
+
+		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow);
+		const html = await runPandiffAndGetHTML(tmp,fileFullPath);
+		unlinkTmpFile(tmp);
 		
-			const panel = vscode.window.createWebviewPanel(
-				'pandiffPanel',
-				'Pandif Render',
-				vscode.ViewColumn.One,
-				{}
-			);
+
+		if(!html){
+			vscode.window.showInformationMessage('No Differences with HEAD')
+			return
+		}
 		
-			panel.webview.html = combineHTML(html,stylesFile);
+		const panel = vscode.window.createWebviewPanel(
+			'pandiffPanel',
+			'Pandif Render',
+			vscode.ViewColumn.One,
+			{}
+		);
+		
+		panel.webview.html = combineHTML(html,stylesFile);
 
 	});
 
@@ -122,6 +133,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showTextDocument(doc)
 			})
 	});
+
 	context.subscriptions.push(editStyle);
 
 	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async (...files:vscode.Uri[]) => {
@@ -132,8 +144,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	})
 	context.subscriptions.push(rightClick);
-
-	
 
 }
 

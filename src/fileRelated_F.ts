@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path'
+import * as fs from 'fs'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
@@ -10,14 +11,14 @@ export async function getFilesPath (){
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
                     return uri
                 })
-                .map((file:vscode.Uri):vscode.QuickPickItem=>{
+                    .map((file:vscode.Uri):vscode.QuickPickItem=>{
 
-                    return {
-                        detail: file.path,
-                        label: path.basename(file.path),
-                        iconPath: new vscode.ThemeIcon('file-text')
-                    }
-                });
+                        return {
+                            detail: file.path,
+                            label: path.basename(file.path),
+                            iconPath: new vscode.ThemeIcon('file-text')
+                        }
+                    });
 
             return filesPath
 }
@@ -40,8 +41,6 @@ export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode
             iconPath: new vscode.ThemeIcon('git-commit')
         }
     })
-
-
 }
 
 export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
@@ -52,3 +51,26 @@ export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
         file: filePath,
     })
 }
+
+
+export function writeTmpFile(filename:string, parentPath:string, content:Buffer):string{
+    const tmpFolder = path.join(parentPath, 'tmp')
+    const tmp = path.join(tmpFolder, filename);
+
+    if(!fs.existsSync(tmpFolder)){
+        fs.mkdirSync(tmpFolder)
+    }
+
+    fs.writeFileSync(tmp, content)
+
+    return tmp
+}
+
+export async function unlinkTmpFile(tmpPath:string){
+    fs.unlink(tmpPath,(err)=>{
+        if(err){
+            throw err
+        }
+    });
+}
+

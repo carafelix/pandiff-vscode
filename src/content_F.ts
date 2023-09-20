@@ -1,7 +1,5 @@
 import pandiff = require("pandiff");
 import * as vscode from "vscode";
-import * as fs from 'fs';
-import * as path from 'path'
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
@@ -17,29 +15,18 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
         } else return result
     }
 
-    export async function getGitDiffs(hash:string,filename:string,filePath:string,extensionPath:string):Promise<string> {
-
-        const parentPath = path.dirname(filePath);
-        const tmpFolder = path.join(extensionPath, 'tmp')
-        const tmp = path.join(tmpFolder, filename)
+    export async function getGitShow(hash:string,filename:string,parentPath:string):Promise<Buffer | null> {
 
         const rev = git.cwd({
             path: parentPath
         }).showBuffer(`${hash}:${filename}`);
 
-        if(!fs.existsSync(tmpFolder)){
-            fs.mkdirSync(tmpFolder)
-        }
-
-        fs.writeFileSync(tmp, await rev)
-        
-        const result = await runPandiffAndGetHTML(tmp,filePath)
-
-        fs.unlink(tmp,(err)=>{
-            if(err){
-                throw err
-            }
-        });
-
-        return result
+        return rev.then((b)=>{
+            return b
+        }).catch((err)=>{
+            vscode.window.showErrorMessage(err.message)
+            return null
+        })
     }
+
+
