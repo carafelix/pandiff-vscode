@@ -1,6 +1,5 @@
 # Pandiff VScode extension
-
-Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
+## Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Requirements
 
@@ -9,9 +8,9 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Features
 
-- File conversion from and to any type supported by Pandoc
-- Render diffs between files inside VScode
-- Use Pandiff on git revisions
+- File render from any type supported by Pandoc
+- Ability to visualize prose difference between files inside VScode
+- Use Pandiff to compare two revisions of the same file
 
 
 ![preview](https://raw.githubusercontent.com/carafelix/pandiff-vscode/main/img/gateway.gif)
@@ -19,14 +18,12 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Extension Settings
 
-- Styles of the webview can be set directly on the style.html files
+- Styles of the webview can be set directly on the style.css files
+- Enable or disable file formats via the Settings.json file
 
 ## Disclaimer
 
 - Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
-## Known Issues
-
-- Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick with no major reason to not overcrowd the list
 
 ## Contribute
 
@@ -34,7 +31,11 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Release Notes
 
-### 0.0.47
+### 0.1.0
+
+- Added config file for enable/disable file formats listed on prompt 
+
+### 0.0.5
 
 - Added feature for compare two revisions of the same file
 ### 0.0.4
