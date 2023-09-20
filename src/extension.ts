@@ -68,7 +68,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 
 		if(!file){
-			vscode.window.showErrorMessage('file not found')
 			return
 		}
 		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line) => {
