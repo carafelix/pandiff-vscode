@@ -28,20 +28,22 @@ Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 - Extension limited to epub, .odt, txt, md, html, docx, pdf, on the quickPick with no major reason to not overcrowd the list
 
-
-## Release Notes
-
-### 0.0.4
-
-- removed the need for running commands on installation
-### 0.0.3
-
-- Implemented simple-git instead of using exec on cli commands
-- uses native pandiff function
-
 ## Contribute
 
 * [Github](https://github.com/carafelix/pandiff-vscode)
+
+## Release Notes
+
+### 0.0.47
+
+- Added feature for compare two revisions of the same file
+### 0.0.4
+
+- Removed the need for running commands on installation
+### 0.0.3
+
+- Implemented simple-git instead of using exec on cli commands
+- Enable the use for native Pandiff function
 
 **Enjoy!**
 
