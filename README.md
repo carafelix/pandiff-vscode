@@ -34,6 +34,7 @@
 ### 0.1.0
 
 - Added config file for enable/disable file formats listed on prompt 
+- Bundle with ESbuild
 
 ### 0.0.5
 
