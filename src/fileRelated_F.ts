@@ -53,6 +53,7 @@ export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
     return await git.cwd({
         path: parentPath,
     }).log({
+        "--":null,
         file: filePath,
     })
 }
