@@ -13,7 +13,7 @@
 - Use Pandiff to compare two revisions of the same file
 
 
-![](https://raw.githubusercontent.com/carafelix/pandiff-vscode/main/img/gateway.gif)
+![preview](https://raw.githubusercontent.com/carafelix/pandiff-vscode/main/img/gateway.gif)
 
 
 ## Extension Settings
