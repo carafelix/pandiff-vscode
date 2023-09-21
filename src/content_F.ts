@@ -19,7 +19,7 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
         const rev = git.cwd({
             path: parentPath
-        }).showBuffer(`${hash}:${filename}`);
+        }).showBuffer(`${hash}:./${filename}`);
 
         return rev.then((b)=>{
             return b
