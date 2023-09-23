@@ -2,7 +2,7 @@
   "name": "pandiff-vscode",
   "displayName": "Pandiff - Enriched Text Differences",
   "description": "Visualize prose diffs from .docx, .odt, .md, or any format supported by Pandoc",
-  "version": "0.1.23",
+  "version": "0.1.30",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",
@@ -30,7 +30,7 @@
       },
       {
         "command": "pandiff-vscode.rightClick",
-        "title": "Compare prose on revision"
+        "title": "Compare prose on Revision"
       },
       {
         "command": "pandiff-vscode.twoRevs",
@@ -52,7 +52,13 @@
       "commandPalette": [{
         "command": "pandiff-vscode.rightClick",
         "when": "false"
-      }]
+      }],
+      "scm/resourceState/context": [
+        {
+          "command": "pandiff-vscode.rightClick",
+          "group": "navigation@999"
+        }
+      ]
     }
   },
   "scripts": {

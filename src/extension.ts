@@ -49,15 +49,17 @@ export async function activate(context: vscode.ExtensionContext) {
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
 		let file:vscode.QuickPickItem | undefined;
 
-		if(files.length === 0 || files?.[0]?.[0]?.path === undefined){
+		if(files.length === 0){
 			let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
 				file = await vscode.window.showQuickPick(filesPath,{
 				matchOnDetail: true,
 				title: 'File Pick base',
 			});
-		} else {
-			const f = files[0][0];
+		} else if(files?.[0]?.[0]?.path || files?.[0]?.[0].m.path) {
+			let f;
+			if(files?.[0]?.[0]?.path) f = files[0][0];
+			if (files?.[0]?.[0]?.m?.path) f = files[0][0].m;
 			const name = f.path.slice(f.path.lastIndexOf('/')+1,Infinity);
 			file = {
                         detail: f.path,
