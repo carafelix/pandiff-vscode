@@ -30,6 +30,9 @@
 * [Github](https://github.com/carafelix/pandiff-vscode)
 
 ## Release Notes
+### 0.1.4
+
+- add check for pandoc installation
 
 ### 0.1.0
 
@@ -47,9 +50,3 @@
 - Enable the use for native Pandiff function
 
 **Enjoy!**
-
-## to-do
-
-- when pandoc is not install, garbage files are acumulated on tmp folder
-- alert when pandoc is not install
-
