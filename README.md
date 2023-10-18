@@ -48,3 +48,8 @@
 
 **Enjoy!**
 
+## to-do
+
+- when pandoc is not install, garbage files are acumulated on tmp folder
+- alert when pandoc is not install
+
