@@ -3,6 +3,7 @@ import * as node_path from 'path';
 import { runPandiffAndGetHTML, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile } from './fileRelated_F';
+import { checkPandocInstall } from './checkPandoc';
 
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -10,7 +11,13 @@ export async function activate(context: vscode.ExtensionContext) {
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
 	const configFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'src' ,'config', 'settings.json'));
 
+	await checkPandocInstall()
+
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
+
+		if(await checkPandocInstall()){
+			return
+		}
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
@@ -47,6 +54,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(compareTwoFiles);
 	
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
+
+		if(await checkPandocInstall()){
+			return
+		}
+
 		let file:vscode.QuickPickItem | undefined;
 
 		if(files.length === 0){
@@ -135,6 +147,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(rightClick);
 
 	let compareTwoRevisions = vscode.commands.registerCommand('pandiff-vscode.twoRevs', async () => {
+
+		if(await checkPandocInstall()){
+			return
+		}
+
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
 		let file = await vscode.window.showQuickPick(filesPath,{
