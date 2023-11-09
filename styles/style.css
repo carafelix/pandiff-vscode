@@ -20,10 +20,10 @@
       background-color: #ffeef015;
     }
     ins {
-      color: #7aff99;
+      color: #09e31b;
       background-color: #ffeef015;
     }
     del + ins {
-      color: #e36209;
+      color: #09e31b;
       background-color: #ffeef015;
     }
