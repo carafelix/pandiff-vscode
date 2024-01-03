@@ -9,7 +9,7 @@ import { checkPandocInstall } from './checkPandoc';
 export async function activate(context: vscode.ExtensionContext) {
 	
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
-	const configFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'src' ,'config', 'settings.json'));
+	const configFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'out' ,'config', 'settings.json'));
 
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
