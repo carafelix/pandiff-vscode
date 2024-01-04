@@ -45,10 +45,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.ViewColumn.One,
 			{}
 		);
-		
-		panel.webview.html = combineHTML(html,stylesFile);
+		const stylizedHTML = combineHTML(html,stylesFile)
 
-		writeOutputFile(file1.label!, file2.label!, html)
+		panel.webview.html = stylizedHTML;
+
+		writeOutputFile(file1.label!, file2.label!, stylizedHTML)
 
 	});
 
@@ -130,10 +131,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.ViewColumn.One,
 			{}
 		);
-		
-		panel.webview.html = combineHTML(html,stylesFile);
+		const stylizedHTML = combineHTML(html,stylesFile)
 
-		writeOutputFile(fileName, fileHash.slice(0,7), html)
+		panel.webview.html = stylizedHTML;
+
+		writeOutputFile(fileName, fileHash.slice(0,7), stylizedHTML)
 
 	});
 
@@ -230,10 +232,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.ViewColumn.One,
 			{}
 		);
+		const stylizedHTML = combineHTML(html,stylesFile)
 		
-		panel.webview.html = combineHTML(html,stylesFile);
+		panel.webview.html = stylizedHTML
 
-		writeOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), html)
+		writeOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), stylizedHTML)
 
 
 	});

@@ -30,6 +30,12 @@
 * [Github](https://github.com/carafelix/pandiff-vscode)
 
 ## Release Notes
+
+### 0.1.5
+
+- add feature for keeping the output file via editing the config, defaults to false
+
+
 ### 0.1.4
 
 - add check for pandoc installation
