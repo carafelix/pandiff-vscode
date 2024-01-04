@@ -41,5 +41,6 @@
                         "**/*.twiki",
                         "**/*.typst",
                         "**/*.wiki"
-                    ]
+                    ],
+    "keep-output-file": false
 }

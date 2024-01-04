@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as node_path from 'path';
 import { runPandiffAndGetHTML, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile } from './fileRelated_F';
+import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeOutputFile } from './fileRelated_F';
 import { checkPandocInstall } from './checkPandoc';
 
 
@@ -37,16 +37,19 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
-			const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
+		const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
 
-			const panel = vscode.window.createWebviewPanel(
-				'pandiffPanel',
-				`${file1.label} - ${file2.label}`,
-				vscode.ViewColumn.One,
-				{}
-			);
+		const panel = vscode.window.createWebviewPanel(
+			'pandiffPanel',
+			`${file1.label} - ${file2.label}`,
+			vscode.ViewColumn.One,
+			{}
+		);
 		
-			panel.webview.html = combineHTML(html,stylesFile);
+		panel.webview.html = combineHTML(html,stylesFile);
+
+		writeOutputFile(file1.label!, file2.label!, html)
+
 	});
 
 	context.subscriptions.push(compareTwoFiles);
@@ -115,7 +118,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow as Buffer, false);
 		const html = await runPandiffAndGetHTML(tmp,fileFullPath);
 		unlinkTmpFile(tmp);
-		
 
 		if(!html){
 			vscode.window.showInformationMessage('No Difference with Working Tree file')
@@ -131,6 +133,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		
 		panel.webview.html = combineHTML(html,stylesFile);
 
+		writeOutputFile(fileName, fileHash.slice(0,7), html)
+
 	});
 
 	context.subscriptions.push(compareWithRevision);
@@ -142,6 +146,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.commands.executeCommand('pandiff-vscode.compareRevision',files);
 		}
 	})
+
 	context.subscriptions.push(rightClick);
 
 	let compareTwoRevisions = vscode.commands.registerCommand('pandiff-vscode.twoRevs', async () => {
@@ -227,6 +232,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		);
 		
 		panel.webview.html = combineHTML(html,stylesFile);
+
+		writeOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), html)
+
 
 	});
 

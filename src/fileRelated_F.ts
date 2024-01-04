@@ -61,10 +61,7 @@ export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
 
 export function writeTmpFile(filename:string, parentPath:string, content:Buffer, changeFilename:boolean):string{
     const tmpFolder = path.join(parentPath, 'tmp')
-    let tmp
-    if(changeFilename){
-        tmp = path.join(tmpFolder, '2_' + filename);
-    } else tmp = path.join(tmpFolder, '1_' + filename);
+    let tmp = (changeFilename) ? path.join(tmpFolder, '2_' + filename) : path.join(tmpFolder, '1_' + filename);
 
     if(!fs.existsSync(tmpFolder)){
         fs.mkdirSync(tmpFolder)
@@ -81,6 +78,16 @@ export function unlinkTmpFile(tmpPath:string){
             throw err
         }
     });
+}
+
+// foR = FileOrRevision
+export function writeOutputFile(foR1 : string, foR2 : string, content : string ){
+    if(extensionSettings['keep-output-file']){
+        const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+        if(!workspaceUri) return;
+        const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_c_${foR1}_${foR2}.html`);
+        fs.writeFileSync(filePathInWorkspace.fsPath, content)
+    }
 }
 
 function spreadPatterns(patterns:string[]):string{
