@@ -37,7 +37,11 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
-		const html  = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
+		const html = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
+		if(!html){
+			vscode.window.showErrorMessage('Pandiff returned empty')
+			return
+		}
 
 		const panel = vscode.window.createWebviewPanel(
 			'pandiffPanel',
@@ -119,6 +123,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow as Buffer, false);
 		const html = await runPandiffAndGetHTML(tmp,fileFullPath);
 		unlinkTmpFile(tmp);
+
+		if(!html){
+			vscode.window.showErrorMessage('Pandiff fail')
+			return
+		}
+		
 
 		if(!html){
 			vscode.window.showInformationMessage('No Difference with Working Tree file')
@@ -220,6 +230,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		const html = await runPandiffAndGetHTML(tmp1,tmp2);
 		unlinkTmpFile(tmp1);
 		unlinkTmpFile(tmp2);
+
+		if(!html){
+			vscode.window.showErrorMessage('Pandiff fail')
+			return
+		}
+
 
 		if(!html){
 			vscode.window.showInformationMessage('No differences between Revisions')
