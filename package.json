@@ -2,7 +2,7 @@
   "name": "pandiff-vscode",
   "displayName": "Pandiff - Enriched Text Differences",
   "description": "Visualize prose diffs from .docx, .odt, .md, or any format supported by Pandoc",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",
@@ -37,8 +37,8 @@
         "title": "Pandiff: Compare diffs from two selected revisions"
       },
       {
-        "command": "pandiff-vscode.editConfig",
-        "title": "Pandiff: Edit config file"
+        "command": "pandiff-vscode.openSettings",
+        "title": "Pandiff: Open Settings"
       }
     ],
     "menus": {
@@ -49,17 +49,78 @@
           "group": "3_compare@999"
         }
       ],
-      "commandPalette": [{
-        "command": "pandiff-vscode.rightClick",
-        "when": "false"
-      }],
+      "commandPalette": [
+        {
+          "command": "pandiff-vscode.rightClick",
+          "when": "false"
+        }
+      ],
       "scm/resourceState/context": [
         {
           "command": "pandiff-vscode.rightClick",
           "group": "navigation@999"
         }
+      ],
+      "extension/context": [
+        {
+          "command": "pandiff-vscode.openSettings",
+          "group": "2_configure"
+        }
       ]
-    }
+    },
+    "configuration": [
+      {
+        "title": "Pandiff",
+        "properties": {
+          "HeroProtagonist.pandiff-vscode.keepOutputFile": {
+            "type": "boolean",
+            "default": false,
+            "description": "Write the output file to the workspace folder"
+          },
+          "HeroProtagonist.pandiff-vscode.enabledFilesExtensions": {
+            "type": "array",
+            "default": ["docx","odt","txt","md","html","epub"],
+            "description": "File extensions allowed to be matched while searching for a file",
+            "items": {
+              "type": "string",
+              "enum": [
+                "docx",
+                "odt",
+                "txt",
+                "md",
+                "html",
+                "epub",
+                "bib",
+                "biblatex",
+                "creole",
+                "json",
+                "csv",
+                "tsv",
+                "xml",
+                "dokuwiki",
+                "fb2",
+                "ipynb",
+                "1",
+                "muse",
+                "hs",
+                "opml",
+                "org",
+                "ris",
+                "rtf",
+                "rst",
+                "t2t",
+                "textile",
+                "tikiwiki",
+                "twiki",
+                "typst",
+                "wiki"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

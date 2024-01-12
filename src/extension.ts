@@ -2,15 +2,12 @@ import * as vscode from 'vscode';
 import * as node_path from 'path';
 import { runPandiffAndGetHTML, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeOutputFile } from './fileRelated_F';
+import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, checkAndWriteOutputFile } from './fileRelated_F';
 import { checkPandocInstall } from './checkPandoc';
 
 
 export async function activate(context: vscode.ExtensionContext) {
-	
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
-	const configFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'out' ,'config', 'settings.json'));
-
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
 		if(await checkPandocInstall()){
@@ -52,8 +49,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		const stylizedHTML = combineHTML(html,stylesFile)
 
 		panel.webview.html = stylizedHTML;
-
-		writeOutputFile(file1.label!, file2.label!, stylizedHTML)
+		
+		
+		checkAndWriteOutputFile(file1.label!, file2.label!, stylizedHTML)
 
 	});
 
@@ -145,7 +143,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		panel.webview.html = stylizedHTML;
 
-		writeOutputFile(fileName, fileHash.slice(0,7), stylizedHTML)
+		checkAndWriteOutputFile(fileName, fileHash.slice(0,7), stylizedHTML)
 
 	});
 
@@ -252,7 +250,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		
 		panel.webview.html = stylizedHTML
 
-		writeOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), stylizedHTML)
+		checkAndWriteOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), stylizedHTML)
 
 
 	});
@@ -267,13 +265,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(editStyle);
 
-	let editConfig = vscode.commands.registerCommand('pandiff-vscode.editConfig',async () => {
-		vscode.workspace.openTextDocument(configFile).then(doc => {
-			vscode.window.showTextDocument(doc)
-			})
-	})
-	context.subscriptions.push(editConfig);
-
+	vscode.commands.registerCommand('pandiff-vscode.openSettings', () => {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'ext:pandiff-vscode');
+	});
 
 }
 

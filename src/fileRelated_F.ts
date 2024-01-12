@@ -1,14 +1,19 @@
 import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
-import * as extensionSettings from './config/settings.json'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
-const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
+const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
+const config = vscode.workspace.getConfiguration('pandiff-vscode');
 
 export async function getFilesPath (){
-    let filesUri = await vscode.workspace.findFiles(spreadPatterns(extensionSettings['enabled-fileFormats']),
-                                                    spreadPatterns(extensionSettings['disabled-directories']));
+    const allowedFiles = config.get('enabledFilesExtensions', ["docx","odt","txt","md","html","epub"]);
+    const reformatAllowedFiles = allowedFiles.map((v)=>composePattern(v));
+    let filesUri = await vscode.workspace.findFiles(spreadPatterns(reformatAllowedFiles),
+
+                                                    spreadPatterns([
+                                                        "**/node_modules/**" // disable directories
+                                                    ]));
                                                     
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
                     return uri
@@ -81,8 +86,9 @@ export function unlinkTmpFile(tmpPath:string){
 }
 
 // foR = FileOrRevision
-export function writeOutputFile(foR1 : string, foR2 : string, content : string ){
-    if(extensionSettings['keep-output-file']){
+export function checkAndWriteOutputFile(foR1 : string, foR2 : string, content : string ){
+    const keepOutputFile = config.get('keepOutputFile', false);
+    if(keepOutputFile){
         const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
         if(!workspaceUri) return;
         const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_c_${foR1}_${foR2}.html`);
@@ -92,4 +98,7 @@ export function writeOutputFile(foR1 : string, foR2 : string, content : string )
 
 function spreadPatterns(patterns:string[]):string{
     return "{" + patterns.join(',') + '}'
+}
+function composePattern(ext : string){
+    return `**/*.${ext}`
 }
