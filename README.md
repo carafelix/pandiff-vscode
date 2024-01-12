@@ -33,8 +33,8 @@
 
 ### 0.1.5
 
-- add feature for keeping the output file via editing the config, defaults to false
-
+- add feature for keeping the output file via editing the extension settings
+- refactor extension settings to use vscode native settings
 
 ### 0.1.4
 
