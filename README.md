@@ -31,6 +31,10 @@
 
 ## Release Notes
 
+### 0.1.6
+
+- add option for selecting the output format of the writed output file
+
 ### 0.1.5
 
 - add feature for keeping the output file via editing the extension settings
