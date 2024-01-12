@@ -1,18 +1,16 @@
 import * as vscode from 'vscode';
 import * as node_path from 'path';
-import { runPandiffAndGetHTML, getGitShow} from './content_F';
+import { runPandiffAndGetContent, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, checkAndWriteOutputFile } from './fileRelated_F';
-import { checkPandocInstall } from './checkPandoc';
+import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeOutputFile } from './fileRelated_F';
+import { isGitRepo, isPandocInstalled } from './checksRequirements';
 
 
 export async function activate(context: vscode.ExtensionContext) {
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
-		if(await checkPandocInstall()){
-			return
-		}
+		if(!(await isPandocInstalled())){ return }
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
@@ -34,7 +32,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
-		const html = await runPandiffAndGetHTML(file1.detail!,file2.detail!)
+		const html = await runPandiffAndGetContent(file1.detail!,file2.detail!)
+
 		if(!html){
 			vscode.window.showErrorMessage('Pandiff returned empty')
 			return
@@ -49,19 +48,31 @@ export async function activate(context: vscode.ExtensionContext) {
 		const stylizedHTML = combineHTML(html,stylesFile)
 
 		panel.webview.html = stylizedHTML;
-		
-		
-		checkAndWriteOutputFile(file1.label!, file2.label!, stylizedHTML)
 
+		const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
+		const keepOutputFile = config.get('keepOutputFile', false);
+		const outputFormat = config.get('outputFormat', 'HTML')
+		
+		if(keepOutputFile){ // instead of repeating this code, I should create a file object and work with that
+			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+			const twoFilesNames = `_c_${file1.label}_${file2.label}`;
+			if( outputFormat === 'HTML' ){
+				writeOutputFile(file1.label!, file2.label!, stylizedHTML)
+			} else if (outputFormat === 'Critic Markup'){ // workspaceUri shouldn't be using '!' SHOULDN'T BE!
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
+				const pandiffNewOutput = await runPandiffAndGetContent(file1.detail!, file2.detail!, 'markdown', filePathInWorkspace.fsPath)
+			} else if (outputFormat === 'Docx with Track Changes'){
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
+				const pandiffNewOutput = await runPandiffAndGetContent(file1.detail!, file2.detail!, 'docx', filePathInWorkspace.fsPath)
+			}
+		}
 	});
 
 	context.subscriptions.push(compareTwoFiles);
 	
 	let compareWithRevision = vscode.commands.registerCommand('pandiff-vscode.compareRevision', async (...files:vscode.Uri[] | Array<any>) => {
 
-		if(await checkPandocInstall()){
-			return
-		}
+		if(!(await isPandocInstalled())){ return }
 
 		let file:vscode.QuickPickItem | undefined;
 
@@ -87,6 +98,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		if(!file){
 			return
 		}
+
+		if(!(await isGitRepo(file.detail!))){
+			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
+			return
+		}
+
 		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line) => {
 			if(line){
 				return true
@@ -110,6 +127,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		if(!fileHash || !fileName || !fileFullPath){
 			return
 		}
+		const shortHash = fileHash.slice(0,7)
         const fileParentPath = node_path.dirname(fileFullPath);
 
 		const gitShow= await getGitShow(fileHash,fileName,fileParentPath);
@@ -119,17 +137,11 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 
 		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow as Buffer, false);
-		const html = await runPandiffAndGetHTML(tmp,fileFullPath);
-		unlinkTmpFile(tmp);
-
-		if(!html){
-			vscode.window.showErrorMessage('Pandiff fail')
-			return
-		}
-		
+		const html = await runPandiffAndGetContent(tmp,fileFullPath);
 
 		if(!html){
 			vscode.window.showInformationMessage('No Difference with Working Tree file')
+			unlinkTmpFile(tmp);
 			return
 		}
 		
@@ -142,8 +154,25 @@ export async function activate(context: vscode.ExtensionContext) {
 		const stylizedHTML = combineHTML(html,stylesFile)
 
 		panel.webview.html = stylizedHTML;
-
-		checkAndWriteOutputFile(fileName, fileHash.slice(0,7), stylizedHTML)
+		
+		const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
+		const keepOutputFile = config.get('keepOutputFile', false);
+		const outputFormat = config.get('outputFormat', 'HTML')
+		
+		if(keepOutputFile){
+			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+			const twoFilesNames = `_c_${fileName}_${shortHash}`;
+			if( outputFormat === 'HTML' ){
+				writeOutputFile(fileName, fileHash, stylizedHTML)
+			} else if (outputFormat === 'Critic Markup'){ // workspaceUri shouldn't be using '!' SHOULDN'T BE!
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
+				const pandiffNewOutput = await runPandiffAndGetContent(tmp, fileFullPath, 'markdown', filePathInWorkspace.fsPath)
+			} else if (outputFormat === 'Docx with Track Changes'){
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
+				const pandiffNewOutput = await runPandiffAndGetContent(tmp, fileFullPath, 'docx', filePathInWorkspace.fsPath)
+			}
+		}
+		unlinkTmpFile(tmp);
 
 	});
 
@@ -161,9 +190,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	let compareTwoRevisions = vscode.commands.registerCommand('pandiff-vscode.twoRevs', async () => {
 
-		if(await checkPandocInstall()){
-			return
-		}
+		if(!(await isPandocInstalled())){ return }
 
 		let filesPath: vscode.QuickPickItem[] = await getFilesPath();
 
@@ -176,6 +203,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			return
 		}
 
+		if(!(await isGitRepo(file.detail!))){
+			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
+			return
+		}
+		
 		let hashes:vscode.QuickPickItem[] | undefined = await getFileRevisions(file);
 
 		if(!hashes){
@@ -205,6 +237,9 @@ export async function activate(context: vscode.ExtensionContext) {
 			return
 		}
 
+		const shortHash1 = hash1.slice(0,7)
+		const shortHash2 = hash2.slice(0,7)
+
 		const fileName = file.label
 		const fileFullPath = file.detail;
 
@@ -225,18 +260,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 		const tmp2 = writeTmpFile(fileName,context.extensionPath, gitShow2 as Buffer, true);
 
-		const html = await runPandiffAndGetHTML(tmp1,tmp2);
-		unlinkTmpFile(tmp1);
-		unlinkTmpFile(tmp2);
-
-		if(!html){
-			vscode.window.showErrorMessage('Pandiff fail')
-			return
-		}
-
+		const html = await runPandiffAndGetContent(tmp1,tmp2);
 
 		if(!html){
 			vscode.window.showInformationMessage('No differences between Revisions')
+			unlinkTmpFile(tmp1);
+			unlinkTmpFile(tmp2);
 			return
 		}
 		
@@ -246,12 +275,31 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.ViewColumn.One,
 			{}
 		);
+
 		const stylizedHTML = combineHTML(html,stylesFile)
 		
 		panel.webview.html = stylizedHTML
 
-		checkAndWriteOutputFile(fileName, hash1.slice(0,7) + '_' + hash2.slice(0,7), stylizedHTML)
 
+		const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
+		const keepOutputFile = config.get('keepOutputFile', false);
+		const outputFormat = config.get('outputFormat', 'HTML')
+		
+		if(keepOutputFile){
+			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+			const twoFilesNames = `${fileName}_${shortHash1}_${shortHash2}`;
+			if( outputFormat === 'HTML' ){
+				writeOutputFile(fileName, `${shortHash1}_${shortHash2}`, stylizedHTML)
+			} else if (outputFormat === 'Critic Markup'){ 
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
+				const pandiffNewOutput = await runPandiffAndGetContent(tmp1, tmp2, 'markdown', filePathInWorkspace.fsPath)
+			} else if (outputFormat === 'Docx with Track Changes'){
+				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
+				const pandiffNewOutput = await runPandiffAndGetContent(tmp1, tmp2, 'docx', filePathInWorkspace.fsPath)
+			}
+		}
+		unlinkTmpFile(tmp1);
+		unlinkTmpFile(tmp2);
 
 	});
 
@@ -266,9 +314,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(editStyle);
 
 	vscode.commands.registerCommand('pandiff-vscode.openSettings', () => {
-		vscode.commands.executeCommand('workbench.action.openSettings', 'ext:pandiff-vscode');
+		vscode.commands.executeCommand('workbench.action.openSettings', '@ext:heroprotagonist.pandiff-vscode');
 	});
-
 }
 
 // This method is called when your extension is deactivated

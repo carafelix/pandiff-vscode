@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
-
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function getFilesPath (){
@@ -58,7 +57,7 @@ export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
         path: parentPath,
     }).log({
         "--":null,
-        file: filePath,
+        file: filePath
     })
 }
 
@@ -85,15 +84,15 @@ export function unlinkTmpFile(tmpPath:string){
 }
 
 // foR = FileOrRevision
-export function checkAndWriteOutputFile(foR1 : string, foR2 : string, content : string ){
-    const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
-    const keepOutputFile = config.get('keepOutputFile', false);
-    if(keepOutputFile){
-        const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
-        if(!workspaceUri) return;
-        const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_c_${foR1}_${foR2}.html`);
+export function writeOutputFile(foR1 : string, foR2 : string, content : string, ext = 'html'){ 
+    const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+    if(!workspaceUri){
+        return
+    } else {
+        const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_c_${foR1}_${foR2}.${ext}`);
         fs.writeFileSync(filePathInWorkspace.fsPath, content)
     }
+
 }
 
 function spreadPatterns(patterns:string[]):string{
@@ -102,3 +101,4 @@ function spreadPatterns(patterns:string[]):string{
 function composePattern(ext : string){
     return `**/*.${ext}`
 }
+

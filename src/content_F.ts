@@ -3,11 +3,21 @@ import * as vscode from "vscode";
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
-export async function runPandiffAndGetHTML(f1Path: string, f2Path: string): Promise<string>{
+export async function runPandiffAndGetContent(f1Path: string, f2Path: string, format = 'html', outPath? : string): Promise<string>{
     try {
+        
+        if(outPath){
+            await pandiff(f1Path, f2Path, {
+                to: format,
+                files: true,
+                output: outPath,
+            });
+            return ''
+        }
+
         const result = await pandiff(f1Path, f2Path, {
             to: 'html',
-            files: true
+            files: true,
         });
 
         if (!result) {

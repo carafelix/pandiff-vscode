@@ -77,6 +77,14 @@
             "default": false,
             "description": "Write the output file to the workspace folder"
           },
+          
+          "HeroProtagonist.pandiff-vscode.outputFormat": {
+            "type": "string",
+            "default": "HTML",
+            "description": "",
+            "enum": ["HTML","Critic Markup", "Docx with Track Changes"]
+          },
+
           "HeroProtagonist.pandiff-vscode.enabledFilesExtensions": {
             "type": "array",
             "default": ["docx","odt","txt","md","html","epub"],
