@@ -4,15 +4,14 @@ import * as fs from 'fs'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
 
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
-const config = vscode.workspace.getConfiguration('pandiff-vscode');
 
 export async function getFilesPath (){
-    const allowedFiles = config.get('enabledFilesExtensions', ["docx","odt","txt","md","html","epub"]);
-    const reformatAllowedFiles = allowedFiles.map((v)=>composePattern(v));
-    let filesUri = await vscode.workspace.findFiles(spreadPatterns(reformatAllowedFiles),
-
+    const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
+    const allowedFiles = config.get('enabledFilesExtensions', ["docx","odt","txt","md","html","epub" ]);
+    const patterizeAllowedFiles = allowedFiles.map((v)=>composePattern(v));
+    let filesUri = await vscode.workspace.findFiles(spreadPatterns(patterizeAllowedFiles),
                                                     spreadPatterns([
-                                                        "**/node_modules/**" // disable directories
+                                                        "**/node_modules/**" // disabled directories
                                                     ]));
                                                     
             let filesPath: vscode.QuickPickItem[] = filesUri.map((uri: vscode.Uri)=>{
@@ -87,6 +86,7 @@ export function unlinkTmpFile(tmpPath:string){
 
 // foR = FileOrRevision
 export function checkAndWriteOutputFile(foR1 : string, foR2 : string, content : string ){
+    const config = vscode.workspace.getConfiguration('HeroProtagonist.pandiff-vscode');
     const keepOutputFile = config.get('keepOutputFile', false);
     if(keepOutputFile){
         const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
