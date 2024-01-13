@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as node_path from 'path';
 import { runPandiffAndGetContent, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
-import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeOutputFile } from './fileRelated_F';
+import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeHTMLdirectly, writeOutputFile } from './fileRelated_F';
 import { isGitRepo, isPandocInstalled } from './checksRequirements';
 
 
@@ -53,18 +53,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		const keepOutputFile = config.get('keepOutputFile', false);
 		const outputFormat = config.get('outputFormat', 'HTML')
 		
-		if(keepOutputFile){ // instead of repeating this code, I should create a file object and work with that
-			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
-			const twoFilesNames = `_c_${file1.label}_${file2.label}`;
-			if( outputFormat === 'HTML' ){
-				writeOutputFile(file1.label!, file2.label!, stylizedHTML)
-			} else if (outputFormat === 'Critic Markup'){ // workspaceUri shouldn't be using '!' SHOULDN'T BE!
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
-				const pandiffNewOutput = await runPandiffAndGetContent(file1.detail!, file2.detail!, 'markdown', filePathInWorkspace.fsPath)
-			} else if (outputFormat === 'Docx with Track Changes'){
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
-				const pandiffNewOutput = await runPandiffAndGetContent(file1.detail!, file2.detail!, 'docx', filePathInWorkspace.fsPath)
-			}
+		if(keepOutputFile){
+			await writeOutputFile(file1.detail!, file2.detail!, outputFormat, [file1.label,file2.label], stylizedHTML)
 		}
 	});
 
@@ -160,17 +150,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		const outputFormat = config.get('outputFormat', 'HTML')
 		
 		if(keepOutputFile){
-			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
-			const twoFilesNames = `_c_${fileName}_${shortHash}`;
-			if( outputFormat === 'HTML' ){
-				writeOutputFile(fileName, fileHash, stylizedHTML)
-			} else if (outputFormat === 'Critic Markup'){ // workspaceUri shouldn't be using '!' SHOULDN'T BE!
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
-				const pandiffNewOutput = await runPandiffAndGetContent(tmp, fileFullPath, 'markdown', filePathInWorkspace.fsPath)
-			} else if (outputFormat === 'Docx with Track Changes'){
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
-				const pandiffNewOutput = await runPandiffAndGetContent(tmp, fileFullPath, 'docx', filePathInWorkspace.fsPath)
-			}
+			await writeOutputFile(tmp, fileFullPath, outputFormat, [fileName,shortHash], stylizedHTML)
 		}
 		unlinkTmpFile(tmp);
 
@@ -286,17 +266,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		const outputFormat = config.get('outputFormat', 'HTML')
 		
 		if(keepOutputFile){
-			const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
-			const twoFilesNames = `${fileName}_${shortHash1}_${shortHash2}`;
-			if( outputFormat === 'HTML' ){
-				writeOutputFile(fileName, `${shortHash1}_${shortHash2}`, stylizedHTML)
-			} else if (outputFormat === 'Critic Markup'){ 
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
-				const pandiffNewOutput = await runPandiffAndGetContent(tmp1, tmp2, 'markdown', filePathInWorkspace.fsPath)
-			} else if (outputFormat === 'Docx with Track Changes'){
-				const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
-				const pandiffNewOutput = await runPandiffAndGetContent(tmp1, tmp2, 'docx', filePathInWorkspace.fsPath)
-			}
+			await writeOutputFile(tmp1, tmp2, outputFormat, [fileName,shortHash1,shortHash2], stylizedHTML)
 		}
 		unlinkTmpFile(tmp1);
 		unlinkTmpFile(tmp2);

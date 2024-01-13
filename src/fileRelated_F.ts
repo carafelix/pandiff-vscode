@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
+import { runPandiffAndGetContent } from './content_F';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function getFilesPath (){
@@ -84,12 +85,12 @@ export function unlinkTmpFile(tmpPath:string){
 }
 
 // foR = FileOrRevision
-export function writeOutputFile(foR1 : string, foR2 : string, content : string, ext = 'html'){ 
+export function writeHTMLdirectly(labels : string, content : string, ext = 'html'){ 
     const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
     if(!workspaceUri){
         return
     } else {
-        const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_c_${foR1}_${foR2}.${ext}`);
+        const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_${labels}.${ext}`);
         fs.writeFileSync(filePathInWorkspace.fsPath, content)
     }
 
@@ -102,3 +103,18 @@ function composePattern(ext : string){
     return `**/*.${ext}`
 }
 
+export async function writeOutputFile(path1 : string, path2 : string, outputFormat : string, lables : string[] , stylizedHTML : string) {
+    const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
+	const twoFilesNames = `${lables.join('_')}`;
+
+	    if( outputFormat === 'HTML' && stylizedHTML ){
+			writeHTMLdirectly(lables.join('_'), stylizedHTML)
+		} else if (outputFormat === 'Critic Markup'){ 
+			const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
+            vscode.window.showInformationMessage(filePathInWorkspace.fsPath)
+			const pandiffNewOutput = await runPandiffAndGetContent(path1, path2, 'markdown', filePathInWorkspace.fsPath)
+		} else if (outputFormat === 'Docx with Track Changes'){
+			const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
+			const pandiffNewOutput = await runPandiffAndGetContent(path1, path2, 'docx', filePathInWorkspace.fsPath)
+		}
+} 

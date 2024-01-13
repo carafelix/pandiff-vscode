@@ -5,7 +5,6 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function runPandiffAndGetContent(f1Path: string, f2Path: string, format = 'html', outPath? : string): Promise<string>{
     try {
-        
         if(outPath){
             await pandiff(f1Path, f2Path, {
                 to: format,
