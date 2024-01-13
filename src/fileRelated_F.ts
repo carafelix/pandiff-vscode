@@ -111,7 +111,6 @@ export async function writeOutputFile(path1 : string, path2 : string, outputForm
 			writeHTMLdirectly(lables.join('_'), stylizedHTML)
 		} else if (outputFormat === 'Critic Markup'){ 
 			const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.md');
-            vscode.window.showInformationMessage(filePathInWorkspace.fsPath)
 			const pandiffNewOutput = await runPandiffAndGetContent(path1, path2, 'markdown', filePathInWorkspace.fsPath)
 		} else if (outputFormat === 'Docx with Track Changes'){
 			const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri!, twoFilesNames + '.docx');
