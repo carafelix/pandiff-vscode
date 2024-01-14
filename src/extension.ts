@@ -89,10 +89,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			return
 		}
 
-		if(!(await isGitRepo(file.detail!))){
-			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
-			return
-		}
+		// if(!(await isGitRepo(file.detail!))){
+		// 	vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
+		// 	return
+		// }
 
 		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line) => {
 			if(line){
@@ -183,10 +183,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			return
 		}
 
-		if(!(await isGitRepo(file.detail!))){
-			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
-			return
-		}
+		// if(!(await isGitRepo(file.detail!))){
+		// 	vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
+		// 	return
+		// }
 		
 		let hashes:vscode.QuickPickItem[] | undefined = await getFileRevisions(file);
 
