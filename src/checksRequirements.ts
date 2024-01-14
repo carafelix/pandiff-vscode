@@ -25,7 +25,7 @@ export async function isPandocInstalled():Promise<boolean>{
 export async function isGitRepo(filePath : string){
   const parentPath = path.dirname(filePath) + '/'
   const execGitPromise = await new Promise((resolve,reject)=>{
-    exec(`cd ${parentPath} && git log`, (err,stdout)=>{
+    exec(`cd "${parentPath}" && git log`, (err,stdout)=>{
       if(err){
         reject(err)
       } else if (stdout) resolve(stdout);
