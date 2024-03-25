@@ -4,7 +4,7 @@
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- `git` and `pandoc`to be accesible terminal commands 
+- `git` and `pandoc`to be accesible shell commands 
 
 ## Features
 
