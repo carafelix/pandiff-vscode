@@ -4,7 +4,8 @@
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- Requires Unix-like based OS. Windows support it's in development 
+- Requires Unix-like based OS. Windows support it's in development.
+- `git` and `pandoc`to be accesible terminal commands 
 
 ## Features
 
