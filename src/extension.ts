@@ -255,10 +255,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(editStyle);
-
-	vscode.commands.registerCommand('pandiff-vscode.openSettings', () => {
-		vscode.commands.executeCommand('workbench.action.openSettings', '@ext:heroprotagonist.pandiff-vscode');
-	});
 }
 
 /**
