@@ -1,6 +1,7 @@
 import pandiff = require("pandiff");
 import * as vscode from "vscode";
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
+import { printToOutputChannel } from "./extension";
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function runPandiffAndGetContent(f1Path: string, f2Path: string, format = 'html', outPath? : string): Promise<string>{
@@ -20,10 +21,12 @@ export async function runPandiffAndGetContent(f1Path: string, f2Path: string, fo
         });
 
         if (!result) {
+            printToOutputChannel(`${result}`)
             throw new Error('Error while running Pandiff');
         }
 
         return result;
+
     } catch (error) {
         switch (error){
             case 64:
@@ -42,6 +45,7 @@ export async function runPandiffAndGetContent(f1Path: string, f2Path: string, fo
         return revision.then((b)=>{
             return b
         }).catch((err)=>{
+            printToOutputChannel(`${err}`)
             vscode.window.showErrorMessage(err.message)
             return null
         })

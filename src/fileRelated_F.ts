@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
+import { printToOutputChannel } from './extension';
 import { simpleGit, SimpleGit, CleanOptions, LogResult } from 'simple-git';
 import { runPandiffAndGetContent } from './content_F';
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
@@ -71,7 +72,11 @@ export function writeTmpFile(filename:string, parentPath:string, content:Buffer,
         fs.mkdirSync(tmpFolder)
     }
 
-    fs.writeFileSync(tmp, content)
+    try {
+        fs.writeFileSync(tmp, content)
+    } catch (err) {
+        printToOutputChannel(`${err}`)
+    }
 
     return tmp
 }
@@ -79,6 +84,7 @@ export function writeTmpFile(filename:string, parentPath:string, content:Buffer,
 export function unlinkTmpFile(tmpPath:string){
     fs.unlink(tmpPath,(err)=>{
         if(err){
+            printToOutputChannel(`${err}`)
             throw err
         }
     });
@@ -87,11 +93,14 @@ export function unlinkTmpFile(tmpPath:string){
 // foR = FileOrRevision
 export function writeHTMLdirectly(labels : string, content : string, ext = 'html'){ 
     const workspaceUri = vscode.workspace.workspaceFolders?.[0].uri;
-    if(!workspaceUri){
-        return
-    } else {
+    if(!workspaceUri){ return }
+    else {
         const filePathInWorkspace = vscode.Uri.joinPath(workspaceUri, `_${labels}.${ext}`);
-        fs.writeFileSync(filePathInWorkspace.fsPath, content)
+        try {
+            fs.writeFileSync(filePathInWorkspace.fsPath, content)
+        } catch (err) {
+            printToOutputChannel(`${err}`)
+        }
     }
 
 }
