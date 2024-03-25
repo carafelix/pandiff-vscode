@@ -24,7 +24,12 @@ export async function isPandocInstalled():Promise<boolean>{
 }
 
 export async function isGitRepo(filePath : string){
-  const parentPath = path.dirname(filePath) + '/'
+  let parentPath = path.dirname(filePath) + '/'
+
+  if(process.platform === 'win32' ){
+    parentPath = vscode.Uri.file(parentPath).fsPath
+  }
+  
   const execGitPromise = await new Promise((resolve,reject)=>{
     exec(`cd "${parentPath}" && git log`, (err,stdout)=>{
       if(err){

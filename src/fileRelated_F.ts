@@ -54,7 +54,11 @@ export async function getFileRevisions(file:vscode.QuickPickItem):Promise<vscode
 }
 
 export async function getCommitsFullInfo(filePath:string):Promise<LogResult>{
-    const parentPath = path.dirname(filePath)
+    let parentPath = path.dirname(filePath)
+    if(process.platform === 'win32' ){
+        parentPath = vscode.Uri.file(parentPath).fsPath
+        filePath = vscode.Uri.file(filePath).fsPath
+    }
     return await git.cwd({
         path: parentPath,
     }).log({

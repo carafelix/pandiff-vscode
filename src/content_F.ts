@@ -15,18 +15,19 @@ export async function runPandiffAndGetContent(f1Path: string, f2Path: string, fo
             return ''
         }
 
+        if(process.platform === 'win32' ){
+            f1Path = vscode.Uri.file(f1Path).fsPath
+            f2Path = vscode.Uri.file(f2Path).fsPath
+        }
         const result = await pandiff(f1Path, f2Path, {
             to: 'html',
             files: true,
-        });
+        }).catch((err)=>printToOutputChannel(err));
 
         if (!result) {
-            printToOutputChannel(`${result}`)
             throw new Error('Error while running Pandiff');
         }
-
         return result;
-
     } catch (error) {
         switch (error){
             case 64:
@@ -38,6 +39,9 @@ export async function runPandiffAndGetContent(f1Path: string, f2Path: string, fo
 
     export async function getGitShow(hash:string,filename:string,parentPath:string):Promise<Buffer | null> {
 
+        if(process.platform === 'win32' ){
+            parentPath = vscode.Uri.file(parentPath).fsPath
+        }
         const revision = git.cwd({
             path: parentPath
         }).showBuffer(`${hash}:./${filename}`);
