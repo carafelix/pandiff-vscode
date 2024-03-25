@@ -9,7 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 0.1.7
 
-- add hot Windows support by changing the path into windows-type path's on runtime
+- add hot Windows support by changing the path into windows-type path's at runtime
 
 ### 0.1.6
 
