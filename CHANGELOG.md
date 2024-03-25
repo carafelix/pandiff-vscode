@@ -7,6 +7,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Release Notes
 
+## 0.1.7
+
+- add hot Windows support by changing the path into windows-type path's on runtime
+
 ### 0.1.6
 
 - add option for selecting the output format of the writed output file

@@ -4,7 +4,6 @@
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- Requires Unix-like based OS. Windows support it's in development.
 - `git` and `pandoc`to be accesible terminal commands 
 
 ## Features
@@ -25,6 +24,7 @@
 ## Disclaimer
 
 - Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion
+- Windows support is on alpha, it works but might not. 
 
 ## Contribute
 
