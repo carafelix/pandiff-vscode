@@ -21,17 +21,14 @@ export async function activate(context: vscode.ExtensionContext) {
 			title: 'File Pick 1/2 (base)',
 		});
 
-		if(!file1){
-			return
-		}
+		if(!file1){ return }
 		let file2 = await vscode.window.showQuickPick(filesPath,{
 			matchOnDetail: true,
 			title: 'File Pick 2/2 (changes)',
 		});
 
-		if(!file2){
-			return
-		} else if (file1 === file2){
+		if(!file2){ return } 
+		else if (file1 === file2){
 			vscode.window.showInformationMessage('Selected same file twice')
 		}
 		const html = await runPandiffAndGetContent(file1.detail!,file2.detail!)
@@ -87,14 +84,8 @@ export async function activate(context: vscode.ExtensionContext) {
                     }
 		}
 
-		if(!file){
-			return
-		}
-
-		if(!(await isGitRepo(file.detail!))){
-			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
-			return
-		}
+		if(!file){return}
+		if(!(await isGitRepo(file.detail!))){return}
 
 		let hashes:vscode.QuickPickItem[] | undefined = (await getFileRevisions(file))?.filter((line) => {
 			if(line){
@@ -116,17 +107,13 @@ export async function activate(context: vscode.ExtensionContext) {
 		const fileName = file.label
 		const fileFullPath = file.detail
 
-		if(!fileHash || !fileName || !fileFullPath){
-			return
-		}
+		if(!fileHash || !fileName || !fileFullPath){ return }
 		const shortHash = fileHash.slice(0,7)
         const fileParentPath = node_path.dirname(fileFullPath);
 
-		const gitShow= await getGitShow(fileHash,fileName,fileParentPath);
+		const gitShow = await getGitShow(fileHash,fileName,fileParentPath);
 
-		if(!gitShow){
-			return
-		}
+		if(!gitShow){ return }
 
 		const tmp = writeTmpFile(fileName,context.extensionPath, gitShow as Buffer, false);
 		const html = await runPandiffAndGetContent(tmp,fileFullPath);
@@ -161,9 +148,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(compareWithRevision);
 
 	let rightClick = vscode.commands.registerCommand('pandiff-vscode.rightClick', async (...files:vscode.Uri[]) => {
-		if(!files){
-			return
-		} else{
+		if(!files){ return } 
+		else {
 			vscode.commands.executeCommand('pandiff-vscode.compareRevision',files);
 		}
 	})
@@ -181,14 +167,8 @@ export async function activate(context: vscode.ExtensionContext) {
 				title: 'Pick file 1/3',
 			})
 
-		if(!file){
-			return
-		}
-
-		if(!(await isGitRepo(file.detail!))){
-			vscode.window.showErrorMessage('Selected file is not part of a Git Repository or has no commit history')
-			return
-		}
+		if(!file){ return }
+		if(!(await isGitRepo(file.detail!))){ return }
 		
 		let hashes:vscode.QuickPickItem[] | undefined = await getFileRevisions(file);
 
@@ -204,9 +184,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const hash1 = revision1?.description
 
-		if(!hash1){
-			return
-		}	
+		if(!hash1){ return }	
 
 		let revision2 = await vscode.window.showQuickPick(hashes,{
 			matchOnDetail: true,
@@ -215,9 +193,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		
 		const hash2 = revision2?.description;
 
-		if(!hash2){
-			return
-		}
+		if(!hash2){ return }
 
 		const shortHash1 = hash1.slice(0,7)
 		const shortHash2 = hash2.slice(0,7)
@@ -225,21 +201,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		const fileName = file.label
 		const fileFullPath = file.detail;
 
-		if(!fileName || !fileFullPath){
-			return
-		}
+		if(!fileName || !fileFullPath){ return }
         const fileParentPath = node_path.dirname(fileFullPath);
 		
 		const gitShow1 = await getGitShow(hash1,fileName,fileParentPath);
-		if(!gitShow1){
-			return
-		}
+		if(!gitShow1){ return }
 		const tmp1 = writeTmpFile(fileName,context.extensionPath, gitShow1 as Buffer,false);
 
 		const gitShow2 = await getGitShow(hash2,fileName,fileParentPath);
-		if(!gitShow2){
-			return
-		}
+		if(!gitShow2){ return }
+
 		const tmp2 = writeTmpFile(fileName,context.extensionPath, gitShow2 as Buffer, true);
 
 		const html = await runPandiffAndGetContent(tmp1,tmp2);
