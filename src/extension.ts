@@ -4,10 +4,12 @@ import { runPandiffAndGetContent, getGitShow} from './content_F';
 import { combineHTML } from './combineHtml';
 import { getFilesPath, getFileRevisions, writeTmpFile, unlinkTmpFile, writeHTMLdirectly, writeOutputFile } from './fileRelated_F';
 import { isGitRepo, isPandocInstalled } from './checksRequirements';
+let outputChannel : vscode.OutputChannel ;
 
 
 export async function activate(context: vscode.ExtensionContext) {
 	const stylesFile: vscode.Uri = vscode.Uri.file(node_path.join(context.extensionPath, 'styles', 'style.css'));
+	outputChannel = vscode.window.createOutputChannel("Pandiff");
 	let compareTwoFiles = vscode.commands.registerCommand('pandiff-vscode.difs', async function() {
 
 		if(!(await isPandocInstalled())){ return }
@@ -287,6 +289,21 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.commands.executeCommand('workbench.action.openSettings', '@ext:heroprotagonist.pandiff-vscode');
 	});
 }
+
+/**
+ * Prints the given content on the output channel.
+ *
+ * @param content The content to be printed.
+ * @param reveal Whether the output channel should be revealed.
+ */
+
+export function printToOutputChannel (content: string, reveal = false) : void {
+    outputChannel.appendLine(content);
+    if (reveal) {
+        outputChannel.show(true);
+    }
+};
+
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
