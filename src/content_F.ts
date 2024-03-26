@@ -6,6 +6,10 @@ const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export async function runPandiffAndGetContent(f1Path: string, f2Path: string, format = 'html', outPath? : string): Promise<string>{
     try {
+        if(process.platform === 'win32' ){
+            f1Path = vscode.Uri.file(f1Path).fsPath
+            f2Path = vscode.Uri.file(f2Path).fsPath
+        }
         if(outPath){
             await pandiff(f1Path, f2Path, {
                 to: format,
@@ -15,10 +19,6 @@ export async function runPandiffAndGetContent(f1Path: string, f2Path: string, fo
             return ''
         }
 
-        if(process.platform === 'win32' ){
-            f1Path = vscode.Uri.file(f1Path).fsPath
-            f2Path = vscode.Uri.file(f2Path).fsPath
-        }
         const result = await pandiff(f1Path, f2Path, {
             to: 'html',
             files: true,
