@@ -2,7 +2,7 @@
   "name": "pandiff-vscode",
   "displayName": "Pandiff - Enriched Text Differences",
   "description": "Visualize prose diffs from .docx, .odt, .md, or any format supported by Pandoc",
-  "version": "0.1.70",
+  "version": "0.1.72",
   "publisher": "HeroProtagonist",
   "icon": "img/feather.png",
   "repository": "https://github.com/carafelix/pandiff-vscode",
@@ -13,7 +13,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -67,17 +67,26 @@
             "default": false,
             "description": "Write the output file to the workspace folder"
           },
-          
           "HeroProtagonist.pandiff-vscode.outputFormat": {
             "type": "string",
             "default": "HTML",
             "description": "",
-            "enum": ["HTML","Critic Markup", "Docx with Track Changes"]
+            "enum": [
+              "HTML",
+              "Critic Markup",
+              "Docx with Track Changes"
+            ]
           },
-
           "HeroProtagonist.pandiff-vscode.enabledFilesExtensions": {
             "type": "array",
-            "default": ["docx","odt","txt","md","html","epub"],
+            "default": [
+              "docx",
+              "odt",
+              "txt",
+              "md",
+              "html",
+              "epub"
+            ],
             "description": "File extensions allowed to be matched while searching for a file",
             "items": {
               "type": "string",
@@ -121,10 +130,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
   },
@@ -135,10 +147,15 @@
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
     "@vscode/test-electron": "^2.3.4",
+    "css-loader": "^7.1.1",
+    "mini-css-extract-plugin": "^2.9.0",
     "eslint": "^8.47.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.6"
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "pandiff": "^0.6.0",
