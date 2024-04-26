@@ -7,6 +7,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Release Notes
 
+## 0.2.0
+
+- bundle the project with webpack
+
 ## 0.1.7
 
 - add hot Windows support by changing the path into windows-type path's at runtime
