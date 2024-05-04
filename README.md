@@ -19,7 +19,7 @@
 ## Extension Settings
 
 - Styles of the webview can be set directly on the style.css files
-- Enable or disable file formats via the native VS code settings
+- Enable or disable file formats via the native VS code settings at `Keyboard Shortcuts` <kbd>Ctrl</kbd>+<kbd>K</kbd>―<kbd>Ctrl</kbd>+<kbd>S</kbd> > `@ext:HeroProtagonist.pandiff-vscode`
 
 ## Disclaimer
 
