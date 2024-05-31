@@ -1,9 +1,10 @@
 # Change Log
 
-All notable changes to the "pandiff-vscode" extension will be documented in this file.
+All notable changes to the "pandiff-vscode" extension will be documented in this
+file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
+Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how
+to structure this file.
 
 ## Release Notes
 
@@ -13,7 +14,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 0.1.7
 
-- add hot Windows support by changing the path into windows-type path's at runtime
+- add hot Windows support by changing the path into windows-type path's at
+  runtime
 
 ### 0.1.6
 
@@ -30,7 +32,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### 0.1.0
 
-- Added config file for enable/disable file formats listed on prompt 
+- Added config file for enable/disable file formats listed on prompt
 
 ### 0.0.5
 

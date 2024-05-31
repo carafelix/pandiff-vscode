@@ -1,11 +1,10 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs'
+import * as vscode from "vscode";
+import * as fs from "fs";
 
-export function combineHTML(content:string,stylesFile:vscode.Uri){
+export function combineHTML(content: string, stylesFile: vscode.Uri) {
+  const styles = fs.readFileSync(stylesFile.fsPath, "utf8");
 
-    const styles = fs.readFileSync(stylesFile.fsPath, 'utf8');
-
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">

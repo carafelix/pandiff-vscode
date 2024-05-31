@@ -1,10 +1,11 @@
 # Pandiff VScode extension
+
 ## Integration of [Pandiff](https://github.com/davidar/pandiff) to VScode.
 
 ## Requirements
 
 - System install of [Pandoc](https://pandoc.org/installing.html)
-- `git` and `pandoc`to be accesible shell commands 
+- `git` and `pandoc`to be accesible shell commands
 
 ## Features
 
@@ -13,21 +14,23 @@
 - Use Pandiff to compare two revisions of the same file
 - Supports Linux, Windows and macOS
 
-
 ![preview](https://raw.githubusercontent.com/carafelix/pandiff-vscode/main/img/gateway.gif)
 
 ## Extension Settings
 
 - Styles of the webview can be set directly on the style.css files
-- Enable or disable file formats via the native VS code settings at `Keyboard Shortcuts` <kbd>Ctrl</kbd>+<kbd>K</kbd>―<kbd>Ctrl</kbd>+<kbd>S</kbd> > `@ext:HeroProtagonist.pandiff-vscode`
+- Enable or disable file formats via the native VS code settings at
+  `Keyboard Shortcuts` <kbd>Ctrl</kbd>+<kbd>K</kbd>―<kbd>Ctrl</kbd>+<kbd>S</kbd>
+  > `@ext:HeroProtagonist.pandiff-vscode`
 
 ## Disclaimer
 
-- Do not consider this extension as production ready. It's still on development, things may break. Use at your own discretion  
+- Do not consider this extension as production ready. It's still on development,
+  things may break. Use at your own discretion
 
 ## Contribute
 
-* [Github](https://github.com/carafelix/pandiff-vscode)
+- [Github](https://github.com/carafelix/pandiff-vscode)
 
 ## [Release Notes](CHANGELOG.md)
 
