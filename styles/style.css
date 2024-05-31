@@ -1,29 +1,27 @@
-    body {
-      box-sizing: border-box;
-      width: clamp(200px, 100%, 980px);
-      padding: 45px;
-    }
-    @media (max-width: 767px) {
-      body {
-        padding: 15px;
-      }
-    }
-    p{
-      font-family: 'Times New Roman', Ubuntu, 'Liberation Serif', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      text-align: start;
-      max-width: 75ch;
-      font-size: 20px;
-      word-spacing: 0.1rem;
-    }
-    del {
-      color: #b31d28;
-      background-color: #ffeef015;
-    }
-    ins {
-      color: #09e31b;
-      background-color: #ffeef015;
-    }
-    del + ins {
-      color: #09e31b;
-      background-color: #ffeef015;
-    }
+body {
+  box-sizing: border-box;
+  width: clamp(200px, 100%, 980px);
+  padding: 45px;
+}
+@media (max-width: 767px) {
+  body {
+    padding: 15px;
+  }
+}
+p {
+  font-family: 'Times New Roman', Ubuntu, 'Liberation Serif', system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+}
+del {
+  color: #b31d28;
+  background-color: #ffeef000;
+}
+ins {
+  color: #09e31b;
+  background-color: #ffeef000;
+}
+del + ins {
+  color: #09e31b;
+  background-color: #ffeef000;
+}
